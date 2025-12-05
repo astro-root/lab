@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>るーとの研究室 | QUIZ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Orbitron:wght@400;700;900&family=Source+Code+Pro:wght@400;600&display=swap" rel="stylesheet">
+<style>
+/* --- 変数定義 (共通) --- */
+:root {
+    --primary: #4facfe;
+    --secondary: #00f2fe;
+    --accent: #6366f1;
+    --success: #00e676;
+    --error: #ff0080;
+    --bg-dark: #050810;
+    --text-light: #f1f5f9;
+    --text-muted: #94a3b8;
+    --glass-bg: rgba(16, 24, 40, 0.65);
+    --glass-border: rgba(255, 255, 255, 0.1);
+    --console-bg: rgba(0, 0, 0, 0.6);
+    --card-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+}
+
+/* --- 基本設定 --- */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+    font-family: 'Noto Sans JP', sans-serif;
+    background: var(--bg-dark);
+    color: var(--text-light);
+    line-height: 1.8;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow-x: hidden;
+    position: relative;
+}
+
+/* --- 背景アニメーション --- */
+body::before {
+    content: ''; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: radial-gradient(ellipse at top, #1b2735 0%, #090a0f 100%); z-index: -2;
+}
+body::after {
+    content: ''; position: fixed; top: -50%; left: -50%; width: 200%; height: 200%;
+    background: radial-gradient(circle at 30% 20%, rgba(99, 102, 241, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 70% 60%, rgba(79, 172, 254, 0.08) 0%, transparent 50%);
+    animation: nebulaMove 30s ease-in-out infinite alternate; z-index: -1;
+}
+@keyframes nebulaMove { 0% { transform: translate(0, 0); } 100% { transform: translate(-5%, -5%); } }
+
+h1, h2, h3 { font-family: 'Orbitron', 'Noto Sans JP', sans-serif; }
+a { text-decoration: none; color: inherit; transition: all 0.3s ease; }
+
+/* --- 星のエフェクト --- */
+.stars-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
+.star {
+    position: absolute; background: #fff; border-radius: 50%;
+    box-shadow: 0 0 4px #fff; animation: twinkle var(--duration) ease-in-out infinite; opacity: 0;
+}
+@keyframes twinkle { 0%, 100% { opacity: 0.2; transform: scale(0.8); } 50% { opacity: var(--opacity); transform: scale(1.2); } }
+
+/* --- ヘッダー --- */
+header {
+    background: rgba(5, 8, 16, 0.8); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+    padding: 0.8rem 2rem; position: sticky; top: 0; z-index: 100;
+    border-bottom: 1px solid var(--glass-border); display: flex; justify-content: space-between; align-items: center;
+}
+.logo {
+    font-size: 1.5rem; font-weight: 900; color: var(--text-light); letter-spacing: 0.1em; position: relative;
+    text-shadow: 0 0 10px rgba(79, 172, 254, 0.5);
+}
+.logo::before, .logo::after {
+    content: attr(data-text); position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    background: var(--bg-dark); opacity: 0.8;
+}
+.logo::before { color: #ff00c1; z-index: -1; animation: glitch-anim-1 2.5s infinite linear alternate-reverse; }
+.logo::after { color: #00fff9; z-index: -2; animation: glitch-anim-2 3s infinite linear alternate-reverse; }
+@keyframes glitch-anim-1 { 0% { clip-path: inset(20% 0 80% 0); transform: translate(-2px, 0); } 100% { clip-path: inset(30% 0 50% 0); transform: translate(2px, 0); } }
+@keyframes glitch-anim-2 { 0% { clip-path: inset(10% 0 60% 0); transform: translate(2px, 0); } 100% { clip-path: inset(70% 0 10% 0); transform: translate(-2px, 0); } }
+
+nav ul { list-style: none; display: flex; gap: 1rem; flex-wrap: wrap; justify-content: flex-end; }
+nav li a {
+    font-size: 0.8rem; font-weight: 500; padding: 8px 16px; border-radius: 4px;
+    color: var(--text-muted); border: 1px solid transparent;
+}
+nav li a.active, nav li a:hover {
+    color: var(--secondary); background: rgba(79, 172, 254, 0.1);
+    border-color: rgba(79, 172, 254, 0.3); box-shadow: 0 0 15px rgba(79, 172, 254, 0.2);
+}
+
+/* --- レイアウト --- */
+.grid-container {
+    max-width: 1100px;
+    margin: 40px auto 80px;
+    padding: 0 20px;
+    display: grid;
+    grid-template-columns: 2fr 1fr; /* クイズ2 : ツール1 の比率 */
+    gap: 30px;
+    z-index: 1;
+    animation: fadeInUp 0.8s ease-out;
+}
+@keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+
+/* --- ブロック共通 --- */
+.glass-panel {
+    background: var(--glass-bg);
+    backdrop-filter: blur(16px);
+    border: 1px solid var(--glass-border);
+    border-radius: 16px;
+    padding: 30px;
+    box-shadow: var(--card-shadow);
+    position: relative;
+    overflow: hidden;
+}
+.panel-header {
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    padding-bottom: 15px;
+    margin-bottom: 25px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.panel-title {
+    font-size: 1.2rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    color: var(--secondary);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.panel-title::before {
+    content: ''; display: block; width: 4px; height: 20px;
+    background: var(--primary); box-shadow: 0 0 10px var(--primary);
+}
+
+/* --- クイズエリア（コンソール風） --- */
+.console-window {
+    background: var(--console-bg);
+    border-radius: 8px;
+    border: 1px solid rgba(79, 172, 254, 0.3);
+    padding: 25px;
+    font-family: 'Source Code Pro', monospace;
+    position: relative;
+}
+/* スキャンラインエフェクト */
+.console-window::after {
+    content: " ";
+    display: block;
+    position: absolute; top: 0; left: 0; bottom: 0; right: 0;
+    background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+    z-index: 2;
+    background-size: 100% 2px, 3px 100%;
+    pointer-events: none;
+}
+
+#quiz-question {
+    font-size: 1.1rem;
+    margin-bottom: 30px;
+    line-height: 1.8;
+    color: #fff;
+    text-shadow: 0 0 5px rgba(255,255,255,0.5);
+}
+
+.input-group {
+    display: flex;
+    gap: 10px;
+    position: relative;
+    z-index: 3;
+}
+#quiz-answer {
+    flex: 1;
+    background: rgba(0, 0, 0, 0.5);
+    border: 1px solid #475569;
+    color: var(--secondary);
+    padding: 14px 18px;
+    border-radius: 6px;
+    font-family: 'Source Code Pro', monospace;
+    font-size: 1rem;
+    outline: none;
+    transition: 0.3s;
+}
+#quiz-answer:focus {
+    border-color: var(--secondary);
+    box-shadow: 0 0 15px rgba(0, 242, 254, 0.2);
+}
+#submitBtn {
+    padding: 0 25px;
+    background: linear-gradient(135deg, var(--primary), #2980b9);
+    border: none;
+    border-radius: 6px;
+    color: white;
+    font-weight: bold;
+    font-family: 'Orbitron';
+    cursor: pointer;
+    transition: 0.3s;
+}
+#submitBtn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 20px rgba(79, 172, 254, 0.4);
+}
+
+/* 結果表示 */
+#quiz-result {
+    margin-top: 20px;
+    padding: 15px;
+    border-radius: 6px;
+    background: rgba(255,255,255,0.05);
+    min-height: 20px;
+    font-size: 0.95rem;
+    position: relative;
+    z-index: 3;
+    display: none; /* 初期非表示 */
+}
+#quiz-result.show { display: block; animation: fadeIn 0.5s; }
+@keyframes fadeIn { from{ opacity:0; } to { opacity:1; } }
+
+/* --- ツールエリア（Q-Score） --- */
+.tool-card {
+    text-align: center;
+    padding: 10px;
+}
+.tool-desc {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    margin-bottom: 25px;
+}
+.tool-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 16px;
+    background: rgba(99, 102, 241, 0.1);
+    border: 1px solid var(--accent);
+    color: var(--text-light);
+    border-radius: 10px;
+    font-weight: 700;
+    font-family: 'Orbitron';
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+.tool-btn::before {
+    content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(99, 102, 241, 0.3), transparent);
+    transition: 0.5s;
+}
+.tool-btn:hover {
+    background: rgba(99, 102, 241, 0.25);
+    box-shadow: 0 0 20px rgba(99, 102, 241, 0.4);
+    transform: translateY(-2px);
+}
+.tool-btn:hover::before { left: 100%; }
+
+/* --- フッター --- */
+footer {
+    text-align: center; padding: 30px; font-size: 0.8rem; color: var(--text-muted);
+    border-top: 1px solid var(--glass-border); background: rgba(5, 8, 16, 0.9);
+    margin-top: auto; z-index: 10;
+}
+
+/* --- レスポンシブ --- */
+@media (max-width: 800px) {
+    .grid-container { grid-template-columns: 1fr; gap: 40px; }
+    header { flex-direction: column; gap: 1rem; padding: 1.5rem 1rem; }
+    .input-group { flex-direction: column; }
+    #submitBtn { padding: 12px; width: 100%; }
+}
+</style>
+</head>
+<body>
+
+<div class="stars-container" id="starsContainer"></div>
+
+<header>
+    <a href="index.html" class="logo" data-text="Root's Laboratory">Root's Laboratory</a>
+    <nav>
+        <ul>
+            <li><a href="index.html">TOP</a></li>
+            <li><a href="profile.html">PROFILE</a></li>
+            <li><a href="quiz.html" class="active">QUIZ</a></li>
+            <li><a href="astronomy.html">ASTRONOMY</a></li>
+            <li><a href="blog.html">BLOG</a></li>
+            <li><a href="others.html">OTHERS</a></li>
+            <li><a href="contact.html">CONTACT</a></li>
+        </ul>
+    </nav>
+</header>
+
+<div class="grid-container">
+    
+    <main class="glass-panel">
+        <div class="panel-header">
+            <div class="panel-title">MISSION: DAILY QUIZ</div>
+            <div style="font-size:0.8rem; color:var(--text-muted);">ID: <span id="date-id">--</span></div>
+        </div>
+        
+        <div class="console-window">
+            <div id="quiz-question">
+                <span class="blink">_</span> System Loading...
+            </div>
+            
+            <div class="input-group" id="quiz-area">
+                <input type="text" id="quiz-answer" placeholder="ENTER ANSWER..." autocomplete="off">
+                <button id="submitBtn">TRANSMIT</button>
+            </div>
+            
+            <div id="quiz-result"></div>
+        </div>
+    </main>
+
+    <aside class="glass-panel" style="height: fit-content;">
+        <div class="panel-header">
+            <div class="panel-title">LAB TOOLS</div>
+        </div>
+        <div class="tool-card">
+            <h4 style="margin-bottom:10px; color:var(--text-light);">Q-Score System</h4>
+            <p class="tool-desc">クイズ大会用 得点表示ツール<br>Scoreboard Utility</p>
+            <a href="https://astro-root.github.io/quiz.pointshow/" target="_blank" class="tool-btn" rel="noopener">
+                LAUNCH APP &rarr;
+            </a>
+        </div>
+    </aside>
+
+</div>
+
+<footer>
+    <p>&copy; 2025 Root's Laboratory | All Systems Operational</p>
+</footer>
+
+<script>
+    // --- 星の生成 ---
+    const starsContainer = document.getElementById('starsContainer');
+    const starCount = 100;
+    for (let i = 0; i < starCount; i++) {
+        const star = document.createElement('div');
+        star.classList.add('star');
+        const size = Math.random() * 2 + 1;
+        star.style.width = size + 'px';
+        star.style.height = size + 'px';
+        star.style.left = Math.random() * 100 + '%';
+        star.style.top = Math.random() * 100 + '%';
+        star.style.setProperty('--duration', `${Math.random() * 3 + 2}s`);
+        star.style.setProperty('--opacity', Math.random());
+        star.style.animationDelay = `${Math.random() * 5}s`;
+        starsContainer.appendChild(star);
+    }
+
+    // --- 日付表示 ---
+    document.getElementById('date-id').textContent = new Date().toISOString().slice(0,10).replace(/-/g, '');
+
+    // --- クイズロジック ---
+    const SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/1xHc7oLeC4zuwAfZypRX-0G7GUqmo5I9kGgQMejyRHfU/export?format=csv&gid=0';
+
+    function parseCSV(text) {
+        text = text.replace(/^\uFEFF/, '');
+        const rows = [];
+        const lines = text.split(/\r?\n/);
+        for (let rawLine of lines) {
+            if (!rawLine || rawLine.trim() === '') continue;
+            let line = rawLine;
+            const row = [];
+            let field = '';
+            let inQuotes = false;
+            for (let i = 0; i < line.length; i++) {
+                const ch = line[i];
+                if (inQuotes) {
+                    if (ch === '"') {
+                        if (line[i + 1] === '"') { field += '"'; i++; } else { inQuotes = false; }
+                    } else { field += ch; }
+                } else {
+                    if (ch === '"') { inQuotes = true; }
+                    else if (ch === ',') { row.push(field); field = ''; }
+                    else { field += ch; }
+                }
+            }
+            row.push(field);
+            rows.push(row.map(s => s.trim()));
+        }
+        return rows;
+    }
+
+    function normalizeStr(s) {
+        if (s === undefined || s === null) return '';
+        try { return String(s).normalize('NFKC').trim().toLowerCase(); } catch (e) { return String(s).trim().toLowerCase(); }
+    }
+
+    function todayISO() {
+        return new Date().toISOString().slice(0,10);
+    }
+
+    async function loadQuiz() {
+        const resultBox = document.getElementById('quiz-result');
+        const quizArea = document.getElementById('quiz-area');
+        const questionBox = document.getElementById('quiz-question');
+
+        // すでに回答済みかチェック
+        const saved = localStorage.getItem('lastQuizISODate');
+        if (saved === todayISO()) {
+            quizArea.style.display = 'none';
+            questionBox.innerHTML = '<span style="color:#64748b">Mission Complete.</span><br>本日のクイズは終了しました。';
+            resultBox.innerHTML = '<span style="color:var(--success)">✅ LOG: データの送信は完了しています。</span>';
+            resultBox.classList.add('show');
+            return;
+        }
+
+        try {
+            const res = await fetch(SHEET_CSV_URL, {cache: 'no-store'});
+            const text = await res.text();
+            const rows = parseCSV(text);
+
+            const headerWords = ['question','q','問題','answer','a','解説','explanation'];
+            const firstRow = rows[0] ? rows[0].map(c => (c||'').toString().toLowerCase()) : [];
+            const isHeader = firstRow.some(cell => headerWords.some(w => cell.includes(w)));
+            if (isHeader) rows.shift();
+
+            const validRows = rows.filter(r => r.length >= 2 && (r[0] && r[0].trim() !== ''));
+            if (validRows.length === 0) {
+                questionBox.innerText = '⚠ ERROR: No Valid Data Found.';
+                return;
+            }
+
+            const now = new Date();
+            const start = new Date(now.getFullYear(), 0, 0);
+            const diff = now - start;
+            const dayOfYear = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const quizIndex = (dayOfYear % validRows.length);
+
+            if (validRows[quizIndex] && validRows[quizIndex].length >= 2) {
+                window.currentQuiz = {
+                    q: validRows[quizIndex][0],
+                    a: validRows[quizIndex][1],
+                    exp: validRows[quizIndex][2] || ''
+                };
+                questionBox.innerText = 'Q. ' + window.currentQuiz.q;
+            } else {
+                questionBox.innerText = '⚠ ERROR: Data Retrieval Failed.';
+            }
+        } catch (e) {
+            console.error(e);
+            questionBox.innerText = '⚠ CONNECTION ERROR: Failed to access database.';
+        }
+    }
+
+    function checkAnswer() {
+        const userAns = document.getElementById('quiz-answer').value.trim();
+        const resultBox = document.getElementById('quiz-result');
+        const quizArea = document.getElementById('quiz-area');
+
+        if (!window.currentQuiz) return;
+        if (userAns === "") return;
+
+        const correctAns = window.currentQuiz.a.split(',').map(s => normalizeStr(s));
+        const input = normalizeStr(userAns);
+
+        resultBox.classList.add('show');
+
+        if (correctAns.includes(input)) {
+            resultBox.style.borderLeft = "4px solid var(--success)";
+            resultBox.innerHTML = '<div style="color:var(--success); font-weight:bold; font-size:1.1rem; margin-bottom:10px;">>> ACCESS GRANTED (CORRECT)</div>' + window.currentQuiz.exp;
+        } else {
+            resultBox.style.borderLeft = "4px solid var(--error)";
+            resultBox.innerHTML = '<div style="color:var(--error); font-weight:bold; font-size:1.1rem; margin-bottom:10px;">>> ACCESS DENIED (WRONG)</div>' + window.currentQuiz.exp;
+        }
+
+        localStorage.setItem('lastQuizISODate', todayISO());
+        quizArea.style.display = 'none';
+    }
+
+    document.addEventListener('DOMContentLoaded', loadQuiz);
+    document.getElementById('submitBtn').addEventListener('click', checkAnswer);
+    document.getElementById('quiz-answer').addEventListener('keypress', function(e){ 
+        if (e.key === 'Enter') checkAnswer(); 
+    });
+</script>
+</body>
+</html>
