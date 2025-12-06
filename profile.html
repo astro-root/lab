@@ -6,9 +6,8 @@
 <title>るーとの研究室 | PROFILE</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Orbitron:wght@400;500;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
 <style>
-/* --- 変数定義 (TOPページと統一) --- */
 :root {
     --primary: #4facfe;
     --secondary: #00f2fe;
@@ -17,12 +16,12 @@
     --bg-dark: #050810;
     --text-light: #f1f5f9;
     --text-muted: #94a3b8;
-    --glass-bg: rgba(16, 24, 40, 0.65);
-    --glass-border: rgba(255, 255, 255, 0.1);
-    --card-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+    --glass-bg: rgba(10, 15, 30, 0.7);
+    --glass-border: rgba(100, 200, 255, 0.15);
+    --card-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
+    --neon-glow: 0 0 10px rgba(79, 172, 254, 0.5);
 }
 
-/* --- リセット & 基本設定 --- */
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
 body {
@@ -37,206 +36,291 @@ body {
     position: relative;
 }
 
-/* --- 背景アニメーション --- */
-body::before {
-    content: ''; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-    background: radial-gradient(ellipse at top, #1b2735 0%, #090a0f 100%); z-index: -2;
-}
-body::after {
-    content: ''; position: fixed; top: -50%; left: -50%; width: 200%; height: 200%;
-    background: radial-gradient(circle at 20% 30%, rgba(99, 102, 241, 0.1) 0%, transparent 50%),
-                radial-gradient(circle at 80% 70%, rgba(79, 172, 254, 0.08) 0%, transparent 50%);
-    animation: nebulaMove 30s ease-in-out infinite alternate; z-index: -1;
-}
-@keyframes nebulaMove { 0% { transform: translate(0, 0); } 100% { transform: translate(-5%, -5%); } }
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: #0b101a; }
+::-webkit-scrollbar-thumb { background: #2d4a6d; border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: var(--primary); }
 
-h1, h2, h3 { font-family: 'Orbitron', 'Noto Sans JP', sans-serif; }
-a { text-decoration: none; color: inherit; transition: all 0.3s ease; }
+.bg-layer {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1;
+    pointer-events: none;
+    overflow: hidden;
+}
 
-/* --- 星のエフェクト --- */
-.stars-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
+.bg-gradient {
+    position: absolute; width: 100%; height: 100%;
+    background: radial-gradient(ellipse at top, #1b2735 0%, #090a0f 100%);
+}
+
+.cyber-grid {
+    position: absolute;
+    bottom: -30%; left: -50%; width: 200%; height: 100%;
+    background-image: 
+        linear-gradient(rgba(79, 172, 254, 0.1) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(79, 172, 254, 0.1) 1px, transparent 1px);
+    background-size: 40px 40px;
+    transform: perspective(500px) rotateX(60deg);
+    animation: gridMove 20s linear infinite;
+    mask-image: linear-gradient(to top, rgba(0,0,0,1) 0%, transparent 60%);
+    -webkit-mask-image: linear-gradient(to top, rgba(0,0,0,1) 0%, transparent 60%);
+}
+
+@keyframes gridMove {
+    0% { transform: perspective(500px) rotateX(60deg) translateY(0); }
+    100% { transform: perspective(500px) rotateX(60deg) translateY(40px); }
+}
+
+.stars-container { 
+    position: absolute; top: 0; left: 0; width: 110%; height: 110%;
+    transform: translate(-5%, -5%);
+}
+
 .star {
     position: absolute; background: #fff; border-radius: 50%;
-    box-shadow: 0 0 4px #fff; animation: twinkle var(--duration) ease-in-out infinite; opacity: 0;
+    box-shadow: 0 0 4px #fff;
+    animation: twinkle var(--duration) ease-in-out infinite;
+    opacity: 0;
 }
-@keyframes twinkle { 0%, 100% { opacity: 0.2; transform: scale(0.8); } 50% { opacity: var(--opacity); transform: scale(1.2); } }
 
-/* --- ヘッダー --- */
+@keyframes twinkle {
+    0%, 100% { opacity: 0.2; transform: scale(0.8); }
+    50% { opacity: var(--opacity); transform: scale(1.2); }
+}
+
+h1, h2, h3, .data-label { font-family: 'Orbitron', sans-serif; }
+.data-value { font-family: 'Share Tech Mono', monospace; }
+a { text-decoration: none; color: inherit; transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1); }
+
 header {
-    background: rgba(5, 8, 16, 0.8); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-    padding: 0.8rem 2rem; position: sticky; top: 0; z-index: 100;
-    border-bottom: 1px solid var(--glass-border); display: flex; justify-content: space-between; align-items: center;
+    background: rgba(5, 8, 16, 0.7);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    padding: 1rem 2rem;
+    position: sticky; top: 0; z-index: 100;
+    border-bottom: 1px solid var(--glass-border);
+    display: flex; justify-content: space-between; align-items: center;
 }
 
 .logo {
-    font-size: 1.5rem; font-weight: 900; color: var(--text-light); letter-spacing: 0.1em; position: relative;
-    text-shadow: 0 0 10px rgba(79, 172, 254, 0.5);
+    font-size: 1.5rem; font-weight: 900; color: var(--text-light);
+    letter-spacing: 0.1em; position: relative;
+    text-shadow: 0 0 5px rgba(79, 172, 254, 0.8);
 }
-/* ロゴのグリッチ (TOPと同じ) */
 .logo::before, .logo::after {
     content: attr(data-text); position: absolute; top: 0; left: 0; width: 100%; height: 100%;
     background: var(--bg-dark); opacity: 0.8;
 }
-.logo::before { color: #ff00c1; z-index: -1; animation: glitch-anim-1 2.5s infinite linear alternate-reverse; }
-.logo::after { color: #00fff9; z-index: -2; animation: glitch-anim-2 3s infinite linear alternate-reverse; }
-@keyframes glitch-anim-1 { 0% { clip-path: inset(20% 0 80% 0); transform: translate(-2px, 0); } 100% { clip-path: inset(30% 0 50% 0); transform: translate(2px, 0); } }
-@keyframes glitch-anim-2 { 0% { clip-path: inset(10% 0 60% 0); transform: translate(2px, 0); } 100% { clip-path: inset(70% 0 10% 0); transform: translate(-2px, 0); } }
+.logo::before {
+    color: #ff00c1; z-index: -1;
+    animation: glitch-anim-1 2.5s infinite linear alternate-reverse;
+}
+.logo::after {
+    color: #00fff9; z-index: -2;
+    animation: glitch-anim-2 3s infinite linear alternate-reverse;
+}
 
-nav ul { list-style: none; display: flex; gap: 1rem; flex-wrap: wrap; justify-content: flex-end; }
+@keyframes glitch-anim-1 {
+    0% { clip-path: inset(20% 0 80% 0); transform: translate(-2px, 0); }
+    100% { clip-path: inset(30% 0 50% 0); transform: translate(2px, 0); }
+}
+@keyframes glitch-anim-2 {
+    0% { clip-path: inset(10% 0 60% 0); transform: translate(2px, 0); }
+    100% { clip-path: inset(70% 0 10% 0); transform: translate(-2px, 0); }
+}
+
+nav ul { list-style: none; display: flex; gap: 0.5rem; flex-wrap: wrap; justify-content: flex-end; }
 nav li a {
-    font-size: 0.8rem; font-weight: 500; padding: 8px 16px; border-radius: 4px;
-    color: var(--text-muted); border: 1px solid transparent;
+    font-size: 0.8rem; font-weight: 500; padding: 8px 16px;
+    position: relative; color: var(--text-muted); overflow: hidden;
 }
-nav li a.active, nav li a:hover {
-    color: var(--secondary); background: rgba(79, 172, 254, 0.1);
-    border-color: rgba(79, 172, 254, 0.3); box-shadow: 0 0 15px rgba(79, 172, 254, 0.2);
+nav li a::before {
+    content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 2px;
+    background: var(--secondary); transform: scaleX(0); transform-origin: right;
+    transition: transform 0.4s ease; box-shadow: 0 0 10px var(--secondary);
+}
+nav li a:hover, nav li a.active {
+    color: var(--text-light); text-shadow: 0 0 8px rgba(0, 242, 254, 0.8);
+}
+nav li a:hover::before, nav li a.active::before {
+    transform: scaleX(1); transform-origin: left;
 }
 
-/* --- レイアウトコンテナ --- */
 .main-container {
-    max-width: 1000px; margin: 40px auto 80px; padding: 0 20px; width: 100%;
-    display: flex; gap: 30px; align-items: flex-start;
-    position: relative; z-index: 1; animation: fadeInUp 0.8s ease-out;
+    max-width: 1000px; margin: 60px auto 80px; padding: 0 20px; width: 100%;
+    display: flex; gap: 40px; align-items: flex-start;
+    position: relative; z-index: 1;
 }
-@keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
 
-/* --- サイドバー (IDカード風) --- */
 .sidebar {
     flex: 0 0 300px;
-    background: var(--glass-bg); backdrop-filter: blur(16px);
-    border: 1px solid var(--glass-border); border-radius: 16px;
-    padding: 40px 30px; text-align: center; position: relative;
+    background: var(--glass-bg);
+    backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
+    border-radius: 20px;
+    padding: 40px 30px;
+    text-align: center;
+    position: relative;
     box-shadow: var(--card-shadow);
     overflow: hidden;
+    animation: slideInLeft 0.8s ease-out;
 }
-/* 装飾的なライン */
 .sidebar::before {
-    content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 2px;
+    content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 4px;
     background: linear-gradient(90deg, transparent, var(--secondary), transparent);
 }
 
-/* アバター (ホログラム風) */
 .avatar-wrapper {
-    position: relative; width: 140px; height: 140px; margin: 0 auto 20px;
+    position: relative; width: 150px; height: 150px; margin: 0 auto 20px;
     display: flex; align-items: center; justify-content: center;
 }
+
 .avatar {
     width: 100%; height: 100%; border-radius: 50%;
-    background: radial-gradient(circle, rgba(79,172,254,0.2) 0%, transparent 70%);
-    border: 1px solid rgba(79,172,254,0.5);
+    background: radial-gradient(circle, rgba(79,172,254,0.15) 0%, transparent 70%);
+    border: 1px solid rgba(79,172,254,0.3);
     display: flex; align-items: center; justify-content: center;
     font-size: 4rem; color: #fff; font-family: 'Orbitron';
     text-shadow: 0 0 20px var(--primary);
     position: relative; z-index: 2;
+    box-shadow: inset 0 0 20px rgba(0,0,0,0.5);
 }
-/* アバター周囲の回転リング */
+
 .avatar-ring {
-    position: absolute; top: -10px; left: -10px; right: -10px; bottom: -10px;
-    border-radius: 50%; border: 1px dashed var(--secondary);
-    animation: rotateRing 10s linear infinite; opacity: 0.6; pointer-events: none;
+    position: absolute; top: -15px; left: -15px; right: -15px; bottom: -15px;
+    border-radius: 50%; border: 2px dashed rgba(0, 242, 254, 0.3);
+    border-top-color: var(--secondary);
+    animation: rotateRing 8s linear infinite;
+    pointer-events: none;
 }
+
 @keyframes rotateRing { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 
 .name {
-    font-size: 2rem; margin: 10px 0 5px;
+    font-size: 2.2rem; margin: 15px 0 5px;
     background: linear-gradient(135deg, #fff 0%, var(--primary) 100%);
     -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-    font-weight: 900; letter-spacing: 0.1em;
-}
-.role {
-    color: var(--secondary); font-size: 0.8rem; letter-spacing: 0.05em; margin-bottom: 20px;
-    text-transform: uppercase; font-weight: 700; opacity: 0.8;
+    filter: drop-shadow(0 0 10px rgba(79,172,254,0.3));
+    letter-spacing: 0.1em;
 }
 
-/* --- コンテンツパネル (データ端末風) --- */
+.role {
+    color: var(--secondary); font-size: 0.85rem; letter-spacing: 0.1em;
+    margin-bottom: 20px; text-transform: uppercase; font-weight: 700; opacity: 0.9;
+    font-family: 'Orbitron';
+}
+
 .content-panel {
     flex: 1;
-    background: var(--glass-bg); backdrop-filter: blur(16px);
-    border: 1px solid var(--glass-border); border-radius: 16px;
-    padding: 40px; position: relative;
+    background: var(--glass-bg);
+    backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
+    border-radius: 20px;
+    padding: 50px;
+    position: relative;
     box-shadow: var(--card-shadow);
+    animation: slideInUp 0.8s ease-out 0.2s backwards;
 }
-/* 装飾コーナー */
+
+@keyframes slideInLeft { from { opacity: 0; transform: translateX(-30px); } to { opacity: 1; transform: translateX(0); } }
+@keyframes slideInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+
+.panel-title {
+    font-size: 1.5rem; font-weight: 700; letter-spacing: 0.2em;
+    color: var(--text-light); border-bottom: 1px solid rgba(255,255,255,0.1);
+    padding-bottom: 20px; margin-bottom: 30px; display: flex; align-items: center;
+}
+.panel-title::before {
+    content: '>>'; color: var(--secondary); margin-right: 15px; font-family: 'Share Tech Mono';
+}
+
 .corner-decor {
     position: absolute; width: 20px; height: 20px;
-    border: 2px solid var(--primary); opacity: 0.7; transition: all 0.3s;
+    border: 2px solid var(--secondary); transition: all 0.3s; opacity: 0.8;
 }
-.top-right { top: -1px; right: -1px; border-bottom: none; border-left: none; }
-.bottom-left { bottom: -1px; left: -1px; border-top: none; border-right: none; }
+.top-right { top: -1px; right: -1px; border-bottom: none; border-left: none; border-radius: 0 20px 0 0; }
+.bottom-left { bottom: -1px; left: -1px; border-top: none; border-right: none; border-radius: 0 0 0 20px; }
 
-section { margin-bottom: 40px; }
+section { margin-bottom: 50px; }
 section:last-child { margin-bottom: 0; }
 
 h3 {
-    font-size: 1.1rem; color: var(--text-light);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    padding-bottom: 10px; margin-bottom: 20px;
-    display: flex; align-items: center; letter-spacing: 0.1em;
-}
-h3::before {
-    content: ''; display: inline-block; width: 6px; height: 20px;
-    background: var(--secondary); margin-right: 12px;
-    box-shadow: 0 0 10px var(--secondary);
+    font-size: 1rem; color: var(--secondary);
+    margin-bottom: 20px; letter-spacing: 0.15em;
+    display: inline-block; padding: 4px 12px;
+    background: rgba(0, 242, 254, 0.1); border-radius: 4px;
+    border: 1px solid rgba(0, 242, 254, 0.2);
 }
 
-/* データテーブル */
-.data-grid { display: grid; grid-template-columns: 140px 1fr; gap: 12px 20px; align-items: baseline; }
-.data-label { color: var(--text-muted); font-size: 0.85rem; font-weight: 500; font-family: 'Orbitron'; letter-spacing: 0.05em; }
-.data-value { color: var(--text-light); font-weight: 400; }
+.data-grid {
+    display: grid; grid-template-columns: 140px 1fr; gap: 15px 30px; align-items: baseline;
+}
+.data-label {
+    color: var(--text-muted); font-size: 0.8rem; text-transform: uppercase;
+    letter-spacing: 0.1em; text-align: right;
+}
+.data-value {
+    color: var(--text-light); font-size: 1.05rem;
+    padding-bottom: 5px; border-bottom: 1px dashed rgba(255,255,255,0.1);
+}
 
-/* タグスタイル */
-.tags { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 5px; }
+.tags { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 5px; }
 .tag {
-    font-size: 0.8rem; padding: 6px 14px;
-    background: rgba(79, 172, 254, 0.05);
-    border: 1px solid rgba(79, 172, 254, 0.3);
-    border-radius: 20px; color: var(--text-light);
-    transition: all 0.3s ease;
+    font-size: 0.85rem; padding: 8px 18px;
+    background: rgba(5, 8, 16, 0.6);
+    border: 1px solid rgba(79, 172, 254, 0.4);
+    border-radius: 30px; color: var(--text-light);
+    transition: all 0.3s; cursor: default;
+    box-shadow: 0 0 5px rgba(0,0,0,0.5);
 }
 .tag:hover {
     background: rgba(79, 172, 254, 0.2);
     border-color: var(--secondary);
-    box-shadow: 0 0 12px rgba(0, 242, 254, 0.3);
+    box-shadow: 0 0 15px rgba(0, 242, 254, 0.4);
     transform: translateY(-2px);
 }
 .tag.pink {
-    background: rgba(255, 117, 140, 0.05);
-    border-color: rgba(255, 117, 140, 0.3);
+    border-color: rgba(255, 117, 140, 0.4);
+    color: #ffd1dc;
 }
 .tag.pink:hover {
     background: rgba(255, 117, 140, 0.2);
     border-color: var(--accent-pink);
-    box-shadow: 0 0 12px rgba(255, 117, 140, 0.4);
+    box-shadow: 0 0 15px rgba(255, 117, 140, 0.5);
 }
 
 .message-box {
-    padding: 20px;
-    background: linear-gradient(90deg, rgba(79,172,254,0.05) 0%, transparent 100%);
-    border-left: 3px solid var(--accent);
-    border-radius: 0 8px 8px 0;
-    color: var(--text-muted); font-size: 0.95rem; line-height: 1.8;
+    padding: 25px;
+    background: linear-gradient(90deg, rgba(79, 172, 254, 0.08) 0%, transparent 100%);
+    border-left: 4px solid var(--accent);
+    color: var(--text-light); font-size: 1rem; line-height: 2;
+    font-family: 'Share Tech Mono', 'Noto Sans JP', sans-serif;
 }
 
-/* --- フッター --- */
 footer {
-    text-align: center; padding: 30px; font-size: 0.8rem; color: var(--text-muted);
-    border-top: 1px solid var(--glass-border); background: rgba(5, 8, 16, 0.9);
-    margin-top: auto; z-index: 10;
+    text-align: center; padding: 40px; font-size: 0.8rem;
+    color: var(--text-muted); border-top: 1px solid var(--glass-border);
+    background: rgba(5, 8, 16, 0.9); margin-top: auto; z-index: 10;
 }
+footer span { font-family: 'Orbitron'; color: var(--secondary); }
 
-/* --- レスポンシブ --- */
 @media (max-width: 900px) {
-    .main-container { flex-direction: column; gap: 30px; margin-top: 30px; }
-    .sidebar { width: 100%; flex: none; display: flex; flex-direction: column; align-items: center; }
+    .main-container { flex-direction: column; gap: 40px; margin-top: 40px; }
+    .sidebar { width: 100%; flex: none; }
     header { flex-direction: column; gap: 1rem; padding: 1.5rem 1rem; }
     nav ul { justify-content: center; }
-    .data-grid { grid-template-columns: 100px 1fr; }
+    .data-grid { grid-template-columns: 100px 1fr; gap: 15px 15px; }
+    .content-panel { padding: 30px 20px; }
+    .cyber-grid { transform: perspective(300px) rotateX(60deg); }
 }
 </style>
 </head>
 <body>
 
-<div class="stars-container" id="starsContainer"></div>
+<div class="bg-layer">
+    <div class="bg-gradient"></div>
+    <div class="cyber-grid"></div>
+    <div class="stars-container" id="starsContainer"></div>
+</div>
 
 <header>
     <a href="index.html" class="logo" data-text="Root's Laboratory">Root's Laboratory</a>
@@ -253,7 +337,6 @@ footer {
 </header>
 
 <div class="main-container">
-    
     <aside class="sidebar">
         <div class="avatar-wrapper">
             <div class="avatar-ring"></div>
@@ -264,6 +347,7 @@ footer {
     </aside>
 
     <main class="content-panel">
+        <div class="panel-title">USER_PROFILE</div>
         <div class="corner-decor top-right"></div>
         <div class="corner-decor bottom-left"></div>
 
@@ -272,10 +356,8 @@ footer {
             <div class="data-grid">
                 <div class="data-label">Name</div>
                 <div class="data-value">るーと</div>
-                
                 <div class="data-label">Class</div>
                 <div class="data-value">高校2年 (Grade 11)</div>
-                
                 <div class="data-label">Affiliation</div>
                 <div class="data-value">日本物理学会学生会友</div>
             </div>
@@ -296,10 +378,9 @@ footer {
             <div class="data-grid">
                 <div class="data-label">Activities</div>
                 <div class="data-value">Quiz, Pokemon Card, MIX</div>
-                
                 <div class="data-label">Favorites</div>
                 <div class="data-value">
-                    <div class="tags" style="margin-top:0;">
+                    <div class="tags" style="margin-top:0">
                         <span class="tag pink">『ユイカ』</span>
                         <span class="tag">まふまふ</span>
                     </div>
@@ -308,36 +389,53 @@ footer {
         </section>
 
         <section>
-            <h3>MESSAGE</h3>
+            <h3>MESSAGE_LOG</h3>
             <div class="message-box">
                 物理と宇宙が好きな高校生です。気になったことはとことん調べるタイプです。<br>
                 このサイトでは日々の学習ログや、作成したクイズなどを公開しています。
             </div>
         </section>
     </main>
-
 </div>
 
 <footer>
-    <p>&copy; 2025 Root's Laboratory | All Systems Operational</p>
+    <p>&copy; 2025 Root's Laboratory | <span>SYSTEM ONLINE</span></p>
 </footer>
 
 <script>
     const starsContainer = document.getElementById('starsContainer');
-    const starCount = 100;
+    const starCount = 120;
+
     for (let i = 0; i < starCount; i++) {
         const star = document.createElement('div');
         star.classList.add('star');
+        
         const size = Math.random() * 2 + 1;
         star.style.width = size + 'px';
         star.style.height = size + 'px';
-        star.style.left = Math.random() * 100 + '%';
-        star.style.top = Math.random() * 100 + '%';
+        
+        star.style.left = (Math.random() * 110 - 5) + '%';
+        star.style.top = (Math.random() * 110 - 5) + '%';
+        star.dataset.depth = Math.random();
+
         star.style.setProperty('--duration', `${Math.random() * 3 + 2}s`);
         star.style.setProperty('--opacity', Math.random());
         star.style.animationDelay = `${Math.random() * 5}s`;
+        
         starsContainer.appendChild(star);
     }
+
+    document.addEventListener('mousemove', (e) => {
+        const x = e.clientX / window.innerWidth;
+        const y = e.clientY / window.innerHeight;
+        const stars = document.querySelectorAll('.star');
+        stars.forEach(star => {
+            const depth = parseFloat(star.dataset.depth);
+            const moveX = (x - 0.5) * (depth * 20);
+            const moveY = (y - 0.5) * (depth * 20);
+            star.style.transform = `translate(${moveX}px, ${moveY}px)`;
+        });
+    });
 </script>
 
 </body>
