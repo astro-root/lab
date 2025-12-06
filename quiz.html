@@ -6,7 +6,7 @@
 <title>るーとの研究室 | QUIZ</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Orbitron:wght@400;700;900&family=Source+Code+Pro:wght@400;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Orbitron:wght@400;500;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
 <style>
 :root {
     --primary: #4facfe;
@@ -17,10 +17,10 @@
     --bg-dark: #050810;
     --text-light: #f1f5f9;
     --text-muted: #94a3b8;
-    --glass-bg: rgba(16, 24, 40, 0.65);
-    --glass-border: rgba(255, 255, 255, 0.1);
-    --console-bg: rgba(0, 0, 0, 0.6);
-    --card-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+    --glass-bg: rgba(10, 15, 30, 0.75);
+    --glass-border: rgba(100, 200, 255, 0.15);
+    --console-bg: rgba(5, 8, 16, 0.85);
+    --card-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
 }
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -36,232 +36,293 @@ body {
     position: relative;
 }
 
-body::before {
-    content: ''; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-    background: radial-gradient(ellipse at top, #1b2735 0%, #090a0f 100%); z-index: -2;
-}
-body::after {
-    content: ''; position: fixed; top: -50%; left: -50%; width: 200%; height: 200%;
-    background: radial-gradient(circle at 30% 20%, rgba(99, 102, 241, 0.1) 0%, transparent 50%),
-                radial-gradient(circle at 70% 60%, rgba(79, 172, 254, 0.08) 0%, transparent 50%);
-    animation: nebulaMove 30s ease-in-out infinite alternate; z-index: -1;
-}
-@keyframes nebulaMove { 0% { transform: translate(0, 0); } 100% { transform: translate(-5%, -5%); } }
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: #0b101a; }
+::-webkit-scrollbar-thumb { background: #2d4a6d; border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: var(--primary); }
 
-h1, h2, h3 { font-family: 'Orbitron', 'Noto Sans JP', sans-serif; }
-a { text-decoration: none; color: inherit; transition: all 0.3s ease; }
-
-.stars-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
+.bg-layer {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1;
+    pointer-events: none;
+    overflow: hidden;
+}
+.bg-gradient {
+    position: absolute; width: 100%; height: 100%;
+    background: radial-gradient(ellipse at top, #1b2735 0%, #090a0f 100%);
+}
+.cyber-grid {
+    position: absolute;
+    bottom: -30%; left: -50%; width: 200%; height: 100%;
+    background-image: 
+        linear-gradient(rgba(79, 172, 254, 0.1) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(79, 172, 254, 0.1) 1px, transparent 1px);
+    background-size: 40px 40px;
+    transform: perspective(500px) rotateX(60deg);
+    animation: gridMove 20s linear infinite;
+    mask-image: linear-gradient(to top, rgba(0,0,0,1) 0%, transparent 60%);
+    -webkit-mask-image: linear-gradient(to top, rgba(0,0,0,1) 0%, transparent 60%);
+}
+@keyframes gridMove {
+    0% { transform: perspective(500px) rotateX(60deg) translateY(0); }
+    100% { transform: perspective(500px) rotateX(60deg) translateY(40px); }
+}
+.stars-container { 
+    position: absolute; top: 0; left: 0; width: 110%; height: 110%;
+    transform: translate(-5%, -5%);
+}
 .star {
     position: absolute; background: #fff; border-radius: 50%;
-    box-shadow: 0 0 4px #fff; animation: twinkle var(--duration) ease-in-out infinite; opacity: 0;
+    box-shadow: 0 0 4px #fff;
+    animation: twinkle var(--duration) ease-in-out infinite;
+    opacity: 0;
 }
-@keyframes twinkle { 0%, 100% { opacity: 0.2; transform: scale(0.8); } 50% { opacity: var(--opacity); transform: scale(1.2); } }
+@keyframes twinkle {
+    0%, 100% { opacity: 0.2; transform: scale(0.8); }
+    50% { opacity: var(--opacity); transform: scale(1.2); }
+}
+
+h1, h2, h3, h4, .panel-title, button { font-family: 'Orbitron', sans-serif; }
+a { text-decoration: none; color: inherit; transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1); }
 
 header {
-    background: rgba(5, 8, 16, 0.8); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-    padding: 0.8rem 2rem; position: sticky; top: 0; z-index: 100;
-    border-bottom: 1px solid var(--glass-border); display: flex; justify-content: space-between; align-items: center;
+    background: rgba(5, 8, 16, 0.7);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    padding: 1rem 2rem;
+    position: sticky; top: 0; z-index: 100;
+    border-bottom: 1px solid var(--glass-border);
+    display: flex; justify-content: space-between; align-items: center;
 }
 .logo {
-    font-size: 1.5rem; font-weight: 900; color: var(--text-light); letter-spacing: 0.1em; position: relative;
-    text-shadow: 0 0 10px rgba(79, 172, 254, 0.5);
+    font-size: 1.5rem; font-weight: 900; color: var(--text-light);
+    letter-spacing: 0.1em; position: relative;
+    text-shadow: 0 0 5px rgba(79, 172, 254, 0.8);
 }
 .logo::before, .logo::after {
     content: attr(data-text); position: absolute; top: 0; left: 0; width: 100%; height: 100%;
     background: var(--bg-dark); opacity: 0.8;
 }
-.logo::before { color: #ff00c1; z-index: -1; animation: glitch-anim-1 2.5s infinite linear alternate-reverse; }
-.logo::after { color: #00fff9; z-index: -2; animation: glitch-anim-2 3s infinite linear alternate-reverse; }
-@keyframes glitch-anim-1 { 0% { clip-path: inset(20% 0 80% 0); transform: translate(-2px, 0); } 100% { clip-path: inset(30% 0 50% 0); transform: translate(2px, 0); } }
-@keyframes glitch-anim-2 { 0% { clip-path: inset(10% 0 60% 0); transform: translate(2px, 0); } 100% { clip-path: inset(70% 0 10% 0); transform: translate(-2px, 0); } }
-
-nav ul { list-style: none; display: flex; gap: 1rem; flex-wrap: wrap; justify-content: flex-end; }
-nav li a {
-    font-size: 0.8rem; font-weight: 500; padding: 8px 16px; border-radius: 4px;
-    color: var(--text-muted); border: 1px solid transparent;
+.logo::before {
+    color: #ff00c1; z-index: -1;
+    animation: glitch-anim-1 2.5s infinite linear alternate-reverse;
 }
-nav li a.active, nav li a:hover {
-    color: var(--secondary); background: rgba(79, 172, 254, 0.1);
-    border-color: rgba(79, 172, 254, 0.3); box-shadow: 0 0 15px rgba(79, 172, 254, 0.2);
+.logo::after {
+    color: #00fff9; z-index: -2;
+    animation: glitch-anim-2 3s infinite linear alternate-reverse;
+}
+@keyframes glitch-anim-1 {
+    0% { clip-path: inset(20% 0 80% 0); transform: translate(-2px, 0); }
+    100% { clip-path: inset(30% 0 50% 0); transform: translate(2px, 0); }
+}
+@keyframes glitch-anim-2 {
+    0% { clip-path: inset(10% 0 60% 0); transform: translate(2px, 0); }
+    100% { clip-path: inset(70% 0 10% 0); transform: translate(-2px, 0); }
+}
+
+nav ul { list-style: none; display: flex; gap: 0.5rem; flex-wrap: wrap; justify-content: flex-end; }
+nav li a {
+    font-size: 0.8rem; font-weight: 500; padding: 8px 16px;
+    position: relative; color: var(--text-muted); overflow: hidden;
+}
+nav li a::before {
+    content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 2px;
+    background: var(--secondary); transform: scaleX(0); transform-origin: right;
+    transition: transform 0.4s ease; box-shadow: 0 0 10px var(--secondary);
+}
+nav li a:hover, nav li a.active {
+    color: var(--text-light); text-shadow: 0 0 8px rgba(0, 242, 254, 0.8);
+}
+nav li a:hover::before, nav li a.active::before {
+    transform: scaleX(1); transform-origin: left;
+}
+
+.page-title-area {
+    max-width: 1000px; margin: 40px auto 10px; padding: 0 20px;
+    z-index: 1; text-align: center;
+}
+.page-title {
+    font-size: 2.5rem; color: var(--text-light); letter-spacing: 0.2em;
+    text-shadow: 0 0 15px rgba(79, 172, 254, 0.3);
 }
 
 .grid-container {
-    max-width: 1100px;
-    margin: 40px auto 80px;
+    max-width: 1000px;
+    margin: 20px auto 80px;
     padding: 0 20px;
     display: grid;
     grid-template-columns: 2fr 1fr;
     gap: 30px;
     z-index: 1;
+    align-items: start;
     animation: fadeInUp 0.8s ease-out;
 }
 @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
 
 .glass-panel {
     background: var(--glass-bg);
-    backdrop-filter: blur(16px);
+    backdrop-filter: blur(20px);
     border: 1px solid var(--glass-border);
     border-radius: 16px;
-    padding: 30px;
     box-shadow: var(--card-shadow);
     position: relative;
     overflow: hidden;
 }
-.panel-header {
-    border-bottom: 1px solid rgba(255,255,255,0.1);
-    padding-bottom: 15px;
-    margin-bottom: 25px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-}
-.panel-title {
-    font-size: 1.2rem;
-    font-weight: 700;
-    letter-spacing: 0.1em;
-    color: var(--secondary);
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-.panel-title::before {
-    content: ''; display: block; width: 4px; height: 20px;
-    background: var(--primary); box-shadow: 0 0 10px var(--primary);
-}
 
-.console-window {
+.terminal-window {
     background: var(--console-bg);
-    border-radius: 8px;
+    border-radius: 12px;
     border: 1px solid rgba(79, 172, 254, 0.3);
-    padding: 25px;
-    font-family: 'Source Code Pro', monospace;
+    padding: 2px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
     position: relative;
 }
-.console-window::after {
-    content: " ";
-    display: block;
-    position: absolute; top: 0; left: 0; bottom: 0; right: 0;
-    background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
-    z-index: 2;
-    background-size: 100% 2px, 3px 100%;
-    pointer-events: none;
+.terminal-header {
+    background: rgba(255, 255, 255, 0.05);
+    padding: 8px 15px;
+    display: flex; justify-content: space-between; align-items: center;
+    border-bottom: 1px solid rgba(79, 172, 254, 0.2);
+}
+.terminal-title {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.8rem; color: var(--secondary);
+    letter-spacing: 0.1em;
+}
+.terminal-status {
+    width: 8px; height: 8px; background: var(--success);
+    border-radius: 50%; box-shadow: 0 0 5px var(--success);
+    animation: blink 2s infinite;
+}
+@keyframes blink { 0%, 100% { opacity: 0.4; } 50% { opacity: 1; } }
+
+.terminal-content {
+    padding: 30px;
+    font-family: 'Share Tech Mono', monospace;
+    position: relative;
+    min-height: 300px;
+    display: flex; flex-direction: column; justify-content: center;
+}
+.scanlines {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,0) 50%, rgba(0,0,0,0.1) 50%, rgba(0,0,0,0.1));
+    background-size: 100% 4px; pointer-events: none; z-index: 5; opacity: 0.4;
 }
 
 #quiz-question {
-    font-size: 1.1rem;
-    margin-bottom: 30px;
-    line-height: 1.8;
-    color: #fff;
-    text-shadow: 0 0 5px rgba(255,255,255,0.5);
+    font-size: 1.2rem; margin-bottom: 40px; line-height: 1.6;
+    color: #fff; text-shadow: 0 0 5px rgba(255,255,255,0.3);
+}
+.blink-cursor {
+    display: inline-block; width: 10px; height: 1.2rem;
+    background: var(--secondary); margin-left: 5px; vertical-align: middle;
+    animation: blink 1s step-end infinite;
 }
 
 .input-group {
-    display: flex;
-    gap: 10px;
-    position: relative;
-    z-index: 3;
+    display: flex; gap: 15px; position: relative; z-index: 6;
+    border-top: 1px dashed rgba(255, 255, 255, 0.1);
+    padding-top: 20px;
 }
 #quiz-answer {
     flex: 1;
-    background: rgba(0, 0, 0, 0.5);
-    border: 1px solid #475569;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(79, 172, 254, 0.4);
     color: var(--secondary);
-    padding: 14px 18px;
-    border-radius: 6px;
-    font-family: 'Source Code Pro', monospace;
-    font-size: 1rem;
-    outline: none;
-    transition: 0.3s;
+    padding: 12px 18px;
+    border-radius: 4px;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 1.1rem;
+    outline: none; transition: 0.3s;
 }
 #quiz-answer:focus {
     border-color: var(--secondary);
     box-shadow: 0 0 15px rgba(0, 242, 254, 0.2);
+    background: rgba(0, 242, 254, 0.05);
 }
 #submitBtn {
-    padding: 0 25px;
-    background: linear-gradient(135deg, var(--primary), #2980b9);
-    border: none;
-    border-radius: 6px;
-    color: white;
-    font-weight: bold;
-    font-family: 'Orbitron';
-    cursor: pointer;
-    transition: 0.3s;
+    padding: 0 30px;
+    background: rgba(79, 172, 254, 0.1);
+    border: 1px solid var(--primary);
+    border-radius: 4px;
+    color: var(--primary);
+    font-weight: 700;
+    cursor: pointer; transition: 0.3s;
+    letter-spacing: 0.1em;
 }
 #submitBtn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 0 20px rgba(79, 172, 254, 0.4);
+    background: var(--primary);
+    color: #000;
+    box-shadow: 0 0 20px var(--primary);
 }
 
 #quiz-result {
-    margin-top: 20px;
-    padding: 15px;
-    border-radius: 6px;
-    background: rgba(255,255,255,0.05);
-    min-height: 20px;
-    font-size: 0.95rem;
-    position: relative;
-    z-index: 3;
-    display: none;
+    margin-top: 30px; padding: 20px;
+    border-radius: 6px; background: rgba(0,0,0,0.4);
+    font-size: 0.95rem; position: relative; z-index: 6;
+    display: none; border-left: 4px solid transparent;
 }
-#quiz-result.show { display: block; animation: fadeIn 0.5s; }
-@keyframes fadeIn { from{ opacity:0; } to { opacity:1; } }
+#quiz-result.show { display: block; animation: slideIn 0.4s ease-out; }
+@keyframes slideIn { from{ opacity:0; transform: translateY(10px); } to { opacity:1; transform: translateY(0); } }
 
-.tool-card {
-    text-align: center;
-    padding: 10px;
+.tool-panel { padding: 25px; }
+.panel-head {
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    padding-bottom: 10px; margin-bottom: 20px;
+    color: var(--secondary); font-size: 1rem; letter-spacing: 0.1em;
+    display: flex; align-items: center; gap: 10px;
 }
+.panel-head::before { content:''; display:block; width:10px; height:10px; background:var(--secondary); transform: rotate(45deg); }
+
+.tool-card { text-align: center; }
 .tool-desc {
-    font-size: 0.9rem;
-    color: var(--text-muted);
-    margin-bottom: 25px;
+    font-size: 0.85rem; color: var(--text-muted); margin-bottom: 20px;
+    line-height: 1.6;
 }
 .tool-btn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    padding: 16px;
-    background: rgba(99, 102, 241, 0.1);
+    display: flex; align-items: center; justify-content: center;
+    width: 100%; padding: 14px;
+    background: linear-gradient(90deg, rgba(99,102,241,0.1), rgba(99,102,241,0.2));
     border: 1px solid var(--accent);
     color: var(--text-light);
-    border-radius: 10px;
-    font-weight: 700;
-    font-family: 'Orbitron';
-    transition: all 0.3s ease;
-    position: relative;
-    overflow: hidden;
+    border-radius: 8px;
+    font-weight: 700; font-family: 'Orbitron';
+    transition: all 0.3s ease; position: relative; overflow: hidden;
 }
 .tool-btn::before {
     content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(99, 102, 241, 0.3), transparent);
+    background: linear-gradient(90deg, transparent, rgba(99, 102, 241, 0.5), transparent);
     transition: 0.5s;
 }
 .tool-btn:hover {
-    background: rgba(99, 102, 241, 0.25);
-    box-shadow: 0 0 20px rgba(99, 102, 241, 0.4);
-    transform: translateY(-2px);
+    background: rgba(99, 102, 241, 0.4);
+    box-shadow: 0 0 20px rgba(99, 102, 241, 0.5);
+    transform: translateY(-2px); border-color: #fff;
 }
 .tool-btn:hover::before { left: 100%; }
 
 footer {
-    text-align: center; padding: 30px; font-size: 0.8rem; color: var(--text-muted);
-    border-top: 1px solid var(--glass-border); background: rgba(5, 8, 16, 0.9);
-    margin-top: auto; z-index: 10;
+    text-align: center; padding: 40px; font-size: 0.8rem;
+    color: var(--text-muted); border-top: 1px solid var(--glass-border);
+    background: rgba(5, 8, 16, 0.9); margin-top: auto; z-index: 10;
 }
+footer span { font-family: 'Orbitron'; color: var(--secondary); }
 
 @media (max-width: 800px) {
-    .grid-container { grid-template-columns: 1fr; gap: 40px; }
+    .grid-container { grid-template-columns: 1fr; gap: 40px; margin-top: 10px; }
     header { flex-direction: column; gap: 1rem; padding: 1.5rem 1rem; }
+    nav ul { justify-content: center; }
     .input-group { flex-direction: column; }
-    #submitBtn { padding: 12px; width: 100%; }
+    #submitBtn { padding: 14px; width: 100%; }
+    .page-title { font-size: 1.8rem; }
 }
 </style>
 </head>
 <body>
 
-<div class="stars-container" id="starsContainer"></div>
+<div class="bg-layer">
+    <div class="bg-gradient"></div>
+    <div class="cyber-grid"></div>
+    <div class="stars-container" id="starsContainer"></div>
+</div>
 
 <header>
     <a href="index.html" class="logo" data-text="Root's Laboratory">Root's Laboratory</a>
@@ -277,21 +338,26 @@ footer {
     </nav>
 </header>
 
+<div class="page-title-area">
+    <h1 class="page-title">DAILY QUIZ</h1>
+</div>
+
 <div class="grid-container">
     
-    <main class="glass-panel">
-        <div class="panel-header">
-            <div class="panel-title">MISSION: DAILY QUIZ</div>
-            <div style="font-size:0.8rem; color:var(--text-muted);">ID: <span id="date-id">--</span></div>
+    <main class="terminal-window">
+        <div class="terminal-header">
+            <div class="terminal-title">TERMINAL_ID: <span id="date-id">--</span></div>
+            <div class="terminal-status"></div>
         </div>
-        
-        <div class="console-window">
+        <div class="terminal-content">
+            <div class="scanlines"></div>
+            
             <div id="quiz-question">
-                <span class="blink">_</span> System Loading...
+                <span style="color:var(--primary);">>> SYSTEM INITIALIZING...</span><span class="blink-cursor"></span>
             </div>
             
             <div class="input-group" id="quiz-area">
-                <input type="text" id="quiz-answer" placeholder="ENTER ANSWER..." autocomplete="off">
+                <input type="text" id="quiz-answer" placeholder="INPUT_ANSWER..." autocomplete="off">
                 <button id="submitBtn">TRANSMIT</button>
             </div>
             
@@ -299,15 +365,16 @@ footer {
         </div>
     </main>
 
-    <aside class="glass-panel" style="height: fit-content;">
-        <div class="panel-header">
-            <div class="panel-title">LAB TOOLS</div>
-        </div>
+    <aside class="glass-panel tool-panel">
+        <div class="panel-head">LAB TOOLS</div>
         <div class="tool-card">
-            <h4 style="margin-bottom:10px; color:var(--text-light);">Q-Score System</h4>
-            <p class="tool-desc">クイズ大会用 得点表示ツール<br>Scoreboard Utility</p>
+            <h4 style="margin-bottom:10px; color:var(--text-light); font-size:1.1rem;">Q-Score System</h4>
+            <p class="tool-desc">
+                クイズ大会用 得点表示・管理コンソール<br>
+                [ Status: Operational ]
+            </p>
             <a href="https://astro-root.github.io/quiz.pointshow/" target="_blank" class="tool-btn" rel="noopener">
-                LAUNCH APP &rarr;
+                LAUNCH APPLICATION
             </a>
         </div>
     </aside>
@@ -315,27 +382,39 @@ footer {
 </div>
 
 <footer>
-    <p>&copy; 2025 Root's Laboratory | All Systems Operational</p>
+    <p>&copy; 2025 Root's Laboratory | <span>SYSTEM ONLINE</span></p>
 </footer>
 
 <script>
     const starsContainer = document.getElementById('starsContainer');
-    const starCount = 100;
+    const starCount = 120;
     for (let i = 0; i < starCount; i++) {
         const star = document.createElement('div');
         star.classList.add('star');
         const size = Math.random() * 2 + 1;
         star.style.width = size + 'px';
         star.style.height = size + 'px';
-        star.style.left = Math.random() * 100 + '%';
-        star.style.top = Math.random() * 100 + '%';
+        star.style.left = (Math.random() * 110 - 5) + '%';
+        star.style.top = (Math.random() * 110 - 5) + '%';
+        star.dataset.depth = Math.random();
         star.style.setProperty('--duration', `${Math.random() * 3 + 2}s`);
         star.style.setProperty('--opacity', Math.random());
         star.style.animationDelay = `${Math.random() * 5}s`;
         starsContainer.appendChild(star);
     }
+    document.addEventListener('mousemove', (e) => {
+        const x = e.clientX / window.innerWidth;
+        const y = e.clientY / window.innerHeight;
+        const stars = document.querySelectorAll('.star');
+        stars.forEach(star => {
+            const depth = parseFloat(star.dataset.depth);
+            const moveX = (x - 0.5) * (depth * 20);
+            const moveY = (y - 0.5) * (depth * 20);
+            star.style.transform = `translate(${moveX}px, ${moveY}px)`;
+        });
+    });
 
-    document.getElementById('date-id').textContent = new Date().toISOString().slice(0,10).replace(/-/g, '');
+    document.getElementById('date-id').textContent = new Date().toISOString().slice(0,10).replace(/-/g, '') + '_LOG';
 
     const SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/1xHc7oLeC4zuwAfZypRX-0G7GUqmo5I9kGgQMejyRHfU/export?format=csv&gid=0';
 
@@ -390,7 +469,7 @@ footer {
             if (isHeader) rows.shift();
             const validRows = rows.filter(r => r.length >= 2 && (r[0] && r[0].trim() !== ''));
             if (validRows.length === 0) {
-                questionBox.innerText = '⚠ ERROR: No Valid Data Found.';
+                questionBox.innerHTML = '<span style="color:var(--error)">⚠ ERROR: No Valid Data Found in Sector.</span>';
                 return;
             }
             const storedIndexRaw = localStorage.getItem('lastQuizIndex');
@@ -412,9 +491,9 @@ footer {
                     a: validRows[quizIndex][1],
                     exp: validRows[quizIndex][2] || ''
                 };
-                questionBox.innerText = 'Q. ' + window.currentQuiz.q;
+                questionBox.innerHTML = '<span style="color:var(--primary); font-size:0.9rem;">>> INCOMING QUERY...</span><br>' + window.currentQuiz.q;
             } else {
-                questionBox.innerText = '⚠ ERROR: Data Retrieval Failed.';
+                questionBox.innerHTML = '<span style="color:var(--error)">⚠ ERROR: Data Retrieval Failed.</span>';
                 return;
             }
             const answeredDate = localStorage.getItem('lastQuizAnsweredDate');
@@ -423,14 +502,15 @@ footer {
                 const correctDisplay = window.currentQuiz.a;
                 resultBox.classList.add('show');
                 if (wasCorrect) {
-                    resultBox.style.borderLeft = "4px solid var(--success)";
-                    resultBox.innerHTML = '<div style="color:var(--success); font-weight:bold; font-size:1.1rem; margin-bottom:10px;">>> ACCESS GRANTED (CORRECT)</div>' + '<div style="margin-bottom:8px;">正答: ' + correctDisplay + '</div>' + window.currentQuiz.exp;
+                    resultBox.style.borderLeftColor = "var(--success)";
+                    resultBox.innerHTML = '<div style="color:var(--success); font-weight:bold; font-family:Orbitron; margin-bottom:10px;">>> ACCESS GRANTED</div>' + '<div style="margin-bottom:8px; color:var(--text-muted);">ANSWER: <span style="color:#fff">' + correctDisplay + '</span></div>' + window.currentQuiz.exp;
                 } else {
-                    resultBox.style.borderLeft = "4px solid var(--error)";
-                    resultBox.innerHTML = '<div style="color:var(--error); font-weight:bold; font-size:1.1rem; margin-bottom:10px;">>> ACCESS DENIED (WRONG)</div>' + '<div style="margin-bottom:8px;">正答: ' + correctDisplay + '</div>' + window.currentQuiz.exp;
+                    resultBox.style.borderLeftColor = "var(--error)";
+                    resultBox.innerHTML = '<div style="color:var(--error); font-weight:bold; font-family:Orbitron; margin-bottom:10px;">>> ACCESS DENIED</div>' + '<div style="margin-bottom:8px; color:var(--text-muted);">ANSWER: <span style="color:#fff">' + correctDisplay + '</span></div>' + window.currentQuiz.exp;
                 }
                 document.getElementById('quiz-answer').disabled = true;
                 document.getElementById('submitBtn').disabled = true;
+                document.getElementById('submitBtn').innerText = "LOCKED";
             } else {
                 resultBox.classList.remove('show');
                 resultBox.innerHTML = '';
@@ -441,7 +521,7 @@ footer {
             }
         } catch (e) {
             console.error(e);
-            questionBox.innerText = '⚠ CONNECTION ERROR: Failed to access database.';
+            questionBox.innerHTML = '<span style="color:var(--error)">⚠ CONNECTION ERROR: Failed to access mainframe.</span>';
         }
     }
 
@@ -456,17 +536,18 @@ footer {
         resultBox.classList.add('show');
         const correctDisplay = window.currentQuiz.a;
         if (isCorrect) {
-            resultBox.style.borderLeft = "4px solid var(--success)";
-            resultBox.innerHTML = '<div style="color:var(--success); font-weight:bold; font-size:1.1rem; margin-bottom:10px;">>> ACCESS GRANTED (CORRECT)</div>' + '<div style="margin-bottom:8px;">正答: ' + correctDisplay + '</div>' + window.currentQuiz.exp;
+            resultBox.style.borderLeftColor = "var(--success)";
+            resultBox.innerHTML = '<div style="color:var(--success); font-weight:bold; font-family:Orbitron; margin-bottom:10px;">>> ACCESS GRANTED</div>' + '<div style="margin-bottom:8px; color:var(--text-muted);">ANSWER: <span style="color:#fff">' + correctDisplay + '</span></div>' + window.currentQuiz.exp;
         } else {
-            resultBox.style.borderLeft = "4px solid var(--error)";
-            resultBox.innerHTML = '<div style="color:var(--error); font-weight:bold; font-size:1.1rem; margin-bottom:10px;">>> ACCESS DENIED (WRONG)</div>' + '<div style="margin-bottom:8px;">正答: ' + correctDisplay + '</div>' + window.currentQuiz.exp;
+            resultBox.style.borderLeftColor = "var(--error)";
+            resultBox.innerHTML = '<div style="color:var(--error); font-weight:bold; font-family:Orbitron; margin-bottom:10px;">>> ACCESS DENIED</div>' + '<div style="margin-bottom:8px; color:var(--text-muted);">ANSWER: <span style="color:#fff">' + correctDisplay + '</span></div>' + window.currentQuiz.exp;
         }
         localStorage.setItem('lastQuizAnsweredDate', todayISO());
         localStorage.setItem('lastQuizUserAns', userAns);
         localStorage.setItem('lastQuizWasCorrect', isCorrect ? '1' : '0');
         document.getElementById('quiz-answer').disabled = true;
         document.getElementById('submitBtn').disabled = true;
+        document.getElementById('submitBtn').innerText = "LOCKED";
     }
 
     document.addEventListener('DOMContentLoaded', loadQuiz);
