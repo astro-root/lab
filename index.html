@@ -6,7 +6,7 @@
 <title>るーとの研究室 | TOP</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Orbitron:wght@400;500;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
 <style>
 /* --- 変数定義 --- */
 :root {
@@ -16,9 +16,10 @@
     --bg-dark: #050810;
     --text-light: #f1f5f9;
     --text-muted: #94a3b8;
-    --glass-bg: rgba(16, 24, 40, 0.6);
-    --glass-border: rgba(255, 255, 255, 0.1);
-    --card-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+    --glass-bg: rgba(10, 15, 30, 0.65);
+    --glass-border: rgba(100, 200, 255, 0.15);
+    --card-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
+    --neon-glow: 0 0 10px rgba(79, 172, 254, 0.5), 0 0 20px rgba(79, 172, 254, 0.3);
 }
 
 /* --- リセット & 基本設定 --- */
@@ -36,33 +37,52 @@ body {
     position: relative;
 }
 
-/* --- 背景アニメーション --- */
-body::before, body::after {
-    content: '';
-    position: fixed;
-    z-index: -1;
+/* スクロールバーのカスタマイズ */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: #0b101a; }
+::-webkit-scrollbar-thumb { background: #2d4a6d; border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: var(--primary); }
+
+/* --- 背景アニメーション & グリッド --- */
+.bg-layer {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1;
+    pointer-events: none;
+    overflow: hidden;
 }
-body::before {
-    top: 0; left: 0; width: 100%; height: 100%;
+
+/* 深宇宙のグラデーション */
+.bg-gradient {
+    position: absolute; width: 100%; height: 100%;
     background: radial-gradient(ellipse at bottom, #1b2735 0%, #090a0f 100%);
 }
-body::after {
-    top: -50%; left: -50%; width: 200%; height: 200%;
-    background: 
-        radial-gradient(circle at 20% 30%, rgba(99, 102, 241, 0.15) 0%, transparent 50%),
-        radial-gradient(circle at 80% 70%, rgba(79, 172, 254, 0.1) 0%, transparent 50%);
-    animation: nebulaMove 30s ease-in-out infinite alternate;
-}
-@keyframes nebulaMove {
-    0% { transform: translate(0, 0); }
-    100% { transform: translate(-5%, -5%); }
+
+/* サイバーグリッド（地面） */
+.cyber-grid {
+    position: absolute;
+    bottom: -30%;
+    left: -50%;
+    width: 200%;
+    height: 100%;
+    background-image: 
+        linear-gradient(rgba(79, 172, 254, 0.1) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(79, 172, 254, 0.1) 1px, transparent 1px);
+    background-size: 40px 40px;
+    transform: perspective(500px) rotateX(60deg);
+    animation: gridMove 20s linear infinite;
+    mask-image: linear-gradient(to top, rgba(0,0,0,1) 0%, transparent 60%);
+    -webkit-mask-image: linear-gradient(to top, rgba(0,0,0,1) 0%, transparent 60%);
 }
 
-h1, h2, h3 { font-family: 'Orbitron', 'Noto Sans JP', sans-serif; }
-a { text-decoration: none; color: inherit; transition: all 0.3s ease; }
+@keyframes gridMove {
+    0% { transform: perspective(500px) rotateX(60deg) translateY(0); }
+    100% { transform: perspective(500px) rotateX(60deg) translateY(40px); }
+}
 
-/* --- 星のエフェクト --- */
-.stars-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
+/* 星のエフェクト */
+.stars-container { 
+    position: absolute; top: 0; left: 0; width: 110%; height: 110%; /* パララックス用に少し大きく */
+    transform: translate(-5%, -5%);
+}
 .star {
     position: absolute; background: #fff; border-radius: 50%;
     box-shadow: 0 0 4px #fff;
@@ -74,12 +94,15 @@ a { text-decoration: none; color: inherit; transition: all 0.3s ease; }
     50% { opacity: var(--opacity); transform: scale(1.2); }
 }
 
+h1, h2, h3, .widget-title { font-family: 'Orbitron', sans-serif; }
+a { text-decoration: none; color: inherit; transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1); }
+
 /* --- ヘッダー --- */
 header {
-    background: rgba(5, 8, 16, 0.8);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    padding: 0.8rem 2rem;
+    background: rgba(5, 8, 16, 0.7);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    padding: 1rem 2rem;
     position: sticky;
     top: 0;
     z-index: 100;
@@ -96,7 +119,7 @@ header {
     color: var(--text-light);
     letter-spacing: 0.1em;
     position: relative;
-    text-shadow: 0 0 10px rgba(79, 172, 254, 0.5);
+    text-shadow: 0 0 5px rgba(79, 172, 254, 0.8);
 }
 .logo::before, .logo::after {
     content: attr(data-text);
@@ -128,148 +151,215 @@ header {
     100% { clip-path: inset(70% 0 10% 0); transform: translate(-2px, 0); }
 }
 
-nav ul { list-style: none; display: flex; gap: 1rem; flex-wrap: wrap; justify-content: flex-end; }
+/* ナビゲーション */
+nav ul { list-style: none; display: flex; gap: 0.5rem; flex-wrap: wrap; justify-content: flex-end; }
 nav li a {
     font-size: 0.8rem;
     font-weight: 500;
     padding: 8px 16px;
-    border-radius: 4px;
     position: relative;
     color: var(--text-muted);
-    border: 1px solid transparent;
+    overflow: hidden;
+}
+/* SF的なホバーエフェクト */
+nav li a::before {
+    content: '';
+    position: absolute; bottom: 0; left: 0; width: 100%; height: 2px;
+    background: var(--secondary);
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 0.4s ease;
+    box-shadow: 0 0 10px var(--secondary);
 }
 nav li a:hover {
-    color: var(--secondary);
-    background: rgba(79, 172, 254, 0.1);
-    border-color: rgba(79, 172, 254, 0.3);
-    box-shadow: 0 0 15px rgba(79, 172, 254, 0.2);
+    color: var(--text-light);
+    text-shadow: 0 0 8px rgba(0, 242, 254, 0.8);
+}
+nav li a:hover::before {
+    transform: scaleX(1);
+    transform-origin: left;
 }
 
 /* --- ヒーローセクション --- */
 .hero {
     text-align: center;
-    padding: 120px 20px 60px;
+    padding: 140px 20px 80px;
     position: relative;
     z-index: 1;
 }
 .hero h2 {
-    font-size: 3rem;
+    font-size: 3.5rem;
     margin-bottom: 1rem;
-    background: linear-gradient(to right, var(--primary), #fff, var(--secondary));
+    background: linear-gradient(135deg, var(--primary) 0%, #fff 50%, var(--secondary) 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    filter: drop-shadow(0 0 10px rgba(79, 172, 254, 0.5));
+    filter: drop-shadow(0 0 15px rgba(79, 172, 254, 0.4));
+    opacity: 0;
+    animation: fadeIn 1s ease forwards 0.5s;
 }
+
+/* タイピングエフェクト用のカーソル */
 .hero p {
     color: var(--text-muted);
-    font-size: 1.1rem;
-    letter-spacing: 0.1em;
+    font-size: 1.2rem;
+    font-family: 'Share Tech Mono', monospace; /* 等幅フォント */
     max-width: 600px;
     margin: 0 auto;
+    display: inline-block;
+    border-right: 2px solid var(--secondary); /* カーソル */
+    white-space: nowrap;
+    overflow: hidden;
+    width: 0;
+    animation: typing 3s steps(40, end) forwards 1.2s, blink .75s step-end infinite;
 }
+
+@keyframes fadeIn { to { opacity: 1; } }
+@keyframes typing { from { width: 0; } to { width: 100%; } }
+@keyframes blink { from, to { border-color: transparent; } 50% { border-color: var(--secondary); } }
 
 /* --- メインコンテナ --- */
 .container {
-    max-width: 900px;
+    max-width: 960px;
     margin: 0 auto 80px;
-    padding: 40px;
+    padding: 50px;
     width: 95%;
     background: var(--glass-bg);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
     border: 1px solid var(--glass-border);
-    border-radius: 20px;
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 24px;
     box-shadow: var(--card-shadow);
     z-index: 1;
+    position: relative;
 }
+
+/* コンテナの装飾（四隅のアクセント） */
+.container::before, .container::after {
+    content: ''; position: absolute; width: 20px; height: 20px;
+    border: 2px solid var(--secondary); transition: all 0.3s;
+}
+.container::before { top: -1px; left: -1px; border-right: none; border-bottom: none; border-radius: 20px 0 0 0; }
+.container::after { bottom: -1px; right: -1px; border-left: none; border-top: none; border-radius: 0 0 20px 0; }
 
 .intro-text {
     text-align: center;
     margin-bottom: 60px;
     color: var(--text-muted);
-    font-size: 1rem;
-    line-height: 2.2;
+    font-size: 1.05rem;
+    line-height: 2.4;
 }
 .intro-text strong {
     color: var(--text-light);
-    font-size: 1.1rem;
-    border-bottom: 1px solid var(--primary);
+    font-weight: 700;
+    border-bottom: 2px solid rgba(99, 102, 241, 0.5);
+    padding-bottom: 2px;
 }
 
 /* --- X (Twitter) ウィジェットエリア --- */
 .widget-frame {
     position: relative;
     border-radius: 16px;
-    padding: 2px; /* ボーダーの太さ */
-    background: linear-gradient(135deg, rgba(99,102,241,0.5), rgba(0,242,254,0.5));
-    box-shadow: 0 0 20px rgba(79, 172, 254, 0.2);
+    padding: 3px;
+    background: linear-gradient(135deg, rgba(99,102,241,0.4), rgba(0,242,254,0.4));
+    box-shadow: 0 0 30px rgba(79, 172, 254, 0.15);
+}
+.widget-bg {
+    background: rgba(0, 0, 0, 0.8);
+    border-radius: 14px;
+    overflow: hidden;
+    position: relative;
 }
 
 .widget-title {
     position: absolute;
-    top: -12px;
-    left: 20px;
-    background: var(--bg-dark);
-    padding: 2px 12px;
+    top: -14px;
+    left: 24px;
+    background: #0d121f;
+    padding: 4px 16px;
     border-radius: 4px;
     border: 1px solid var(--glass-border);
-    font-family: 'Orbitron';
-    font-size: 0.75rem;
+    font-size: 0.8rem;
     color: var(--secondary);
-    letter-spacing: 0.1em;
+    letter-spacing: 0.15em;
     z-index: 2;
+    box-shadow: 0 0 10px rgba(0, 242, 254, 0.2);
+}
+/* ステータスランプ */
+.widget-title::before {
+    content: ''; display: inline-block; width: 6px; height: 6px;
+    background: #0f0; border-radius: 50%; margin-right: 8px;
+    box-shadow: 0 0 5px #0f0;
+    animation: blink 2s infinite;
 }
 
 .twitter-wrapper {
-    background: rgba(0, 0, 0, 0.6);
-    border-radius: 14px;
-    overflow: hidden;
-    min-height: 400px; /* 読み込み前の高さ確保 */
+    min-height: 500px;
     display: flex;
     justify-content: center;
     align-items: center;
     color: var(--text-muted);
+    position: relative;
 }
-/* ローディング中の表示用 */
+
+/* 走査線（スキャンライン）エフェクト */
+.scanlines {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,0) 50%, rgba(0,0,0,0.1) 50%, rgba(0,0,0,0.1));
+    background-size: 100% 4px;
+    pointer-events: none;
+    z-index: 5;
+    opacity: 0.6;
+}
+
 .twitter-wrapper::before {
-    content: 'Connecting to X Server...';
+    content: '>> ESTABLISHING CONNECTION...';
     position: absolute;
-    font-family: 'Orbitron';
+    font-family: 'Share Tech Mono', monospace;
     font-size: 0.9rem;
-    opacity: 0.5;
-    animation: blink 2s infinite;
+    color: var(--primary);
+    opacity: 0.6;
+    animation: blink 1.5s infinite;
     z-index: 0;
 }
-@keyframes blink { 0%, 100% { opacity: 0.3; } 50% { opacity: 0.7; } }
 
-/* 実際のiframeがロードされたら前面に来るように */
 .twitter-timeline { position: relative; z-index: 1; }
 
 /* --- フッター --- */
 footer {
     text-align: center;
-    padding: 30px;
+    padding: 40px;
     font-size: 0.8rem;
     color: var(--text-muted);
     border-top: 1px solid var(--glass-border);
     background: rgba(5, 8, 16, 0.9);
     margin-top: auto;
+    position: relative;
     z-index: 10;
+}
+footer span {
+    font-family: 'Orbitron';
+    color: var(--secondary);
 }
 
 /* --- レスポンシブ --- */
 @media (max-width: 768px) {
     header { flex-direction: column; gap: 1rem; padding: 1.5rem 1rem; }
-    .hero h2 { font-size: 2rem; }
-    .container { padding: 25px; width: 92%; }
+    .hero h2 { font-size: 2.2rem; }
+    .hero p { font-size: 0.9rem; white-space: normal; width: auto; border: none; animation: none; opacity: 1; }
+    .container { padding: 30px 20px; width: 92%; }
     nav ul { justify-content: center; gap: 0.5rem; }
-    nav li a { font-size: 0.75rem; padding: 6px 12px; }
+    .cyber-grid { transform: perspective(300px) rotateX(60deg); }
 }
 </style>
 </head>
 <body>
 
-<div class="stars-container" id="starsContainer"></div>
+<div class="bg-layer">
+    <div class="bg-gradient"></div>
+    <div class="cyber-grid"></div>
+    <div class="stars-container" id="starsContainer"></div>
+</div>
 
 <header>
     <a href="index.html" class="logo" data-text="Root's Laboratory">Root's Laboratory</a>
@@ -287,43 +377,45 @@ footer {
 
 <div class="hero">
     <h2>Welcome to the Lab.</h2>
-    <p>Exploring the Universe, Physics, and Curiosity.</p>
+    <p>Exploring the Universe, Physics, and Curiosity_</p>
 </div>
 
 <main class="container">
     <div class="intro-text">
         <p>
             ようこそ、<strong>るーとの研究室</strong>へ。<br>
-            ここは天文学、物理学、そして知の探求を行う実験場。<br>
+            ここは天文学、物理学、そして知の探求を行うデジタル実験場。<br>
             無限の好奇心と共に、観測データを記録しています。
         </p>
     </div>
 
     <div class="widget-frame">
-        <div class="widget-title">LATEST LOGS [X]</div>
-        <div class="twitter-wrapper">
-            <a class="twitter-timeline" 
-               data-lang="ja" 
-               data-width="100%" 
-               data-height="600" 
-               data-theme="dark" 
-               data-chrome="noheader nofooter noborders transparent" 
-               href="https://twitter.com/astro_root?ref_src=twsrc%5Etfw">
-               Tweets by astro_root
-            </a>
-            <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+        <div class="widget-title">LATEST LOGS</div>
+        <div class="widget-bg">
+            <div class="scanlines"></div>
+            <div class="twitter-wrapper">
+                <a class="twitter-timeline" 
+                   data-lang="ja" 
+                   data-width="100%" 
+                   data-height="600" 
+                   data-theme="dark" 
+                   data-chrome="noheader nofooter noborders transparent" 
+                   href="https://twitter.com/astro_root?ref_src=twsrc%5Etfw">
+                   </a>
+                <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+            </div>
         </div>
     </div>
 </main>
 
 <footer>
-    <p>&copy; 2025 Root's Laboratory | All Systems Operational</p>
+    <p>&copy; 2025 Root's Laboratory | <span>SYSTEM ONLINE</span></p>
 </footer>
 
 <script>
-    // 星の生成スクリプト
+    // 星の生成
     const starsContainer = document.getElementById('starsContainer');
-    const starCount = 100;
+    const starCount = 120;
 
     for (let i = 0; i < starCount; i++) {
         const star = document.createElement('div');
@@ -333,16 +425,42 @@ footer {
         const size = Math.random() * 2 + 1;
         star.style.width = size + 'px';
         star.style.height = size + 'px';
-        star.style.left = Math.random() * 100 + '%';
-        star.style.top = Math.random() * 100 + '%';
         
-        // アニメーションのばらつき
+        // 画面より少し広範囲に配置（パララックス時の切れ防止）
+        star.style.left = (Math.random() * 110 - 5) + '%';
+        star.style.top = (Math.random() * 110 - 5) + '%';
+        
+        // 奥行き（parallaxの深さ）をランダムに割り当て
+        star.dataset.depth = Math.random(); 
+
         star.style.setProperty('--duration', `${Math.random() * 3 + 2}s`);
         star.style.setProperty('--opacity', Math.random());
         star.style.animationDelay = `${Math.random() * 5}s`;
         
         starsContainer.appendChild(star);
     }
+
+    // マウスパララックス効果（マウスの動きで星が動く）
+    document.addEventListener('mousemove', (e) => {
+        const x = e.clientX / window.innerWidth;
+        const y = e.clientY / window.innerHeight;
+
+        // 星を動かす
+        const stars = document.querySelectorAll('.star');
+        stars.forEach(star => {
+            const depth = parseFloat(star.dataset.depth);
+            const moveX = (x - 0.5) * (depth * 30); // 深度に応じて移動量を変える
+            const moveY = (y - 0.5) * (depth * 30);
+            star.style.transform = `translate(${moveX}px, ${moveY}px)`;
+        });
+
+        // 背景グリッドも少し傾ける（3D感の強調）
+        const grid = document.querySelector('.cyber-grid');
+        const rotateX = 60 + (y - 0.5) * 5;
+        const rotateY = (x - 0.5) * 5;
+        // grid.style.transform = `perspective(500px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+        // グリッドのアニメーションと干渉しないよう、今回はスキップまたは微調整が必要
+    });
 </script>
 
 </body>
