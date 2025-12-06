@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>るーとの研究室 | ASTRONOMY</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Orbitron:wght@400;700;900&family=Source+Code+Pro:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+--primary:#4facfe;
+--secondary:#00f2fe;
+--accent:#6366f1;
+--success:#00e676;
+--error:#ff0080;
+--bg-dark:#050810;
+--text-light:#f1f5f9;
+--text-muted:#94a3b8;
+--glass-bg:rgba(16,24,40,0.65);
+--glass-border:rgba(255,255,255,0.1);
+--console-bg:rgba(0,0,0,0.6);
+--card-shadow:0 8px 32px 0 rgba(0,0,0,0.37);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Noto Sans JP',sans-serif;background:var(--bg-dark);color:var(--text-light);line-height:1.8;min-height:100vh;display:flex;flex-direction:column;overflow-x:hidden;position:relative}
+body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;background:radial-gradient(ellipse at top,#1b2735 0%,#090a0f 100%);z-index:-2}
+body::after{content:'';position:fixed;top:-50%;left:-50%;width:200%;height:200%;background:radial-gradient(circle at 30% 20%,rgba(99,102,241,0.1) 0%,transparent 50%),radial-gradient(circle at 70% 60%,rgba(79,172,254,0.08) 0%,transparent 50%);animation:nebulaMove 30s ease-in-out infinite alternate;z-index:-1}
+@keyframes nebulaMove{0%{transform:translate(0,0)}100%{transform:translate(-5%,-5%)}}
+h1,h2,h3{font-family:'Orbitron','Noto Sans JP',sans-serif}
+a{text-decoration:none;color:inherit;transition:all .3s ease}
+.stars-container{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none}
+.star{position:absolute;background:#fff;border-radius:50%;box-shadow:0 0 4px #fff;animation:twinkle var(--duration) ease-in-out infinite;opacity:0}
+@keyframes twinkle{0%,100%{opacity:.2;transform:scale(.8)}50%{opacity:var(--opacity);transform:scale(1.2)}}
+header{background:rgba(5,8,16,.8);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);padding:.8rem 2rem;position:sticky;top:0;z-index:100;border-bottom:1px solid var(--glass-border);display:flex;justify-content:space-between;align-items:center}
+.logo{font-size:1.5rem;font-weight:900;color:var(--text-light);letter-spacing:.1em;position:relative;text-shadow:0 0 10px rgba(79,172,254,.5)}
+.logo::before,.logo::after{content:attr(data-text);position:absolute;top:0;left:0;width:100%;height:100%;background:var(--bg-dark);opacity:.8}
+.logo::before{color:#ff00c1;z-index:-1;animation:glitch-anim-1 2.5s infinite linear alternate-reverse}
+.logo::after{color:#00fff9;z-index:-2;animation:glitch-anim-2 3s infinite linear alternate-reverse}
+@keyframes glitch-anim-1{0%{clip-path:inset(20% 0 80% 0);transform:translate(-2px,0)}100%{clip-path:inset(30% 0 50% 0);transform:translate(2px,0)}}
+@keyframes glitch-anim-2{0%{clip-path:inset(10% 0 60% 0);transform:translate(2px,0)}100%{clip-path:inset(70% 0 10% 0);transform:translate(-2px,0)}}
+nav ul{list-style:none;display:flex;gap:1rem;flex-wrap:wrap;justify-content:flex-end}
+nav li a{font-size:.8rem;font-weight:500;padding:8px 16px;border-radius:4px;color:var(--text-muted);border:1px solid transparent}
+nav li a.active,nav li a:hover{color:var(--secondary);background:rgba(79,172,254,.1);border-color:rgba(79,172,254,.3);box-shadow:0 0 15px rgba(79,172,254,.2)}
+.container{max-width:1100px;margin:40px auto 80px;padding:0 20px;z-index:1;animation:fadeInUp .8s ease-out}
+@keyframes fadeInUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+.glass-panel{background:var(--glass-bg);backdrop-filter:blur(16px);border:1px solid var(--glass-border);border-radius:16px;padding:30px;box-shadow:var(--card-shadow);position:relative;overflow:hidden;margin-bottom:20px}
+.panel-title{font-size:1.2rem;font-weight:700;letter-spacing:.1em;color:var(--secondary);display:flex;align-items:center;gap:10px;margin-bottom:16px}
+.tab-header{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:18px}
+.tab-btn{padding:10px 14px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.02);color:var(--text-light);font-weight:700;cursor:pointer;transition:all .2s}
+.tab-btn.active{background:rgba(79,172,254,0.12);box-shadow:0 0 12px rgba(79,172,254,.15);color:var(--secondary)}
+.tab-content{display:none}
+.tab-content.active{display:block}
+canvas{background:#000;width:100%;border-radius:8px;display:block}
+.control-panel{margin-top:12px;display:flex;gap:8px}
+.control-panel button{padding:8px 12px;border-radius:8px;border:none;background:linear-gradient(135deg,var(--primary),#2980b9);color:#fff;font-weight:700;cursor:pointer}
+footer{text-align:center;padding:30px;font-size:.8rem;color:var(--text-muted);border-top:1px solid var(--glass-border);background:rgba(5,8,16,.9);margin-top:auto;z-index:10}
+@media(max-width:800px){header{flex-direction:column;gap:1rem;padding:1.5rem 1rem}.control-panel{flex-wrap:wrap}}
+</style>
+</head>
+<body>
+<div class="stars-container" id="starsContainer"></div>
+<header>
+    <a href="index.html" class="logo" data-text="Root's Laboratory">Root's Laboratory</a>
+    <nav>
+        <ul>
+            <li><a href="index.html">TOP</a></li>
+            <li><a href="profile.html">PROFILE</a></li>
+            <li><a href="quiz.html">QUIZ</a></li>
+            <li><a href="astronomy.html" class="active">ASTRONOMY</a></li>
+            <li><a href="blog.html">BLOG</a></li>
+            <li><a href="contact.html">CONTACT</a></li>
+        </ul>
+    </nav>
+</header>
+<div class="container">
+    <div class="glass-panel">
+        <div class="panel-title">Astronomy &amp; Simulation</div>
+        <h3 style="margin-bottom:10px">高校生天文部 AstroHigh</h3>
+        <div style="text-align:center;margin-bottom:18px">
+            <a class="twitter-timeline" data-width="100%" data-height="400" data-theme="dark" href="https://twitter.com/AstroHigh_Info?ref_src=twsrc%5Etfw">Tweets by AstroHigh_Info</a>
+            <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+        </div>
+        <h3 style="margin-top:6px">Space Laboratory</h3>
+        <div class="tab-header" role="tablist">
+            <button class="tab-btn active" onclick="switchTab('sim1', this)">多体重力</button>
+            <button class="tab-btn" onclick="switchTab('sim2', this)">銀河生成</button>
+            <button class="tab-btn" onclick="switchTab('sim3', this)">軌道実験</button>
+            <button class="tab-btn" onclick="switchTab('sim4', this)">ワープ</button>
+        </div>
+        <div id="sim1" class="tab-content active">
+            <h4>Star Cluster (N-Body Gravity)</h4>
+            <p>空間をクリックして星を追加。重力相互作用により星団が形成されます。</p>
+            <canvas id="c1" width="800" height="400" style="cursor:crosshair"></canvas>
+        </div>
+        <div id="sim2" class="tab-content">
+            <h4>Spiral Galaxy Generator</h4>
+            <p>数千の星が中心核の周りを回転し、渦巻構造を形成します。</p>
+            <canvas id="c2" width="800" height="400"></canvas>
+        </div>
+        <div id="sim3" class="tab-content">
+            <h4>Orbital Lab</h4>
+            <p>ドラッグ＆ドロップで惑星を発射し、中心星の安定軌道に乗せてください。</p>
+            <canvas id="c3" width="800" height="400" style="cursor:crosshair"></canvas>
+            <div class="control-panel">
+                <button onclick="resetSim3()">リセット</button>
+            </div>
+        </div>
+        <div id="sim4" class="tab-content">
+            <h4>Warp Drive Experience</h4>
+            <p>マウスを動かすと視点が移動し、クリックで加速します。</p>
+            <canvas id="c4" width="800" height="400" style="cursor:move"></canvas>
+        </div>
+    </div>
+</div>
+<footer>&copy; 2025 Root's Laboratory</footer>
+<script>
+const starsContainer = document.getElementById('starsContainer')
+const starCount = 100
+for(let i=0;i<starCount;i++){
+    const star=document.createElement('div')
+    star.classList.add('star')
+    const size=Math.random()*2+1
+    star.style.width=size+'px'
+    star.style.height=size+'px'
+    star.style.left=Math.random()*100+'%'
+    star.style.top=Math.random()*100+'%'
+    star.style.setProperty('--duration',`${Math.random()*3+2}s`)
+    star.style.setProperty('--opacity',Math.random())
+    star.style.animationDelay=`${Math.random()*5}s`
+    starsContainer.appendChild(star)
+}
+let animId
+function switchTab(id,btn){
+    document.querySelectorAll('.tab-content').forEach(d=>d.classList.remove('active'))
+    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'))
+    document.getElementById(id).classList.add('active')
+    btn.classList.add('active')
+    if(animId) cancelAnimationFrame(animId)
+    if(id==='sim1') startSim1()
+    if(id==='sim2') startSim2()
+    if(id==='sim3') startSim3()
+    if(id==='sim4') startSim4()
+}
+function startSim1(){
+    const c=document.getElementById('c1'),x=c.getContext('2d')
+    let ps=[]
+    function P(u,v,m){this.x=u;this.y=v;this.vx=0;this.vy=0;this.m=m;this.c=`hsl(${Math.random()*50+200},100%,70%)`}
+    for(let i=0;i<50;i++) ps.push(new P(Math.random()*c.width,Math.random()*c.height,Math.random()*2+0.5))
+    c.onmousedown=e=>{
+        const r=c.getBoundingClientRect()
+        ps.push(new P(e.clientX-r.left,e.clientY-r.top,Math.random()*5+2))
+    }
+    function loop(){
+        x.fillStyle='rgba(0,0,0,0.2)'
+        x.fillRect(0,0,c.width,c.height)
+        for(let i=0;i<ps.length;i++){
+            let p=ps[i]
+            for(let j=0;j<ps.length;j++){
+                if(i!==j){
+                    let q=ps[j],dx=q.x-p.x,dy=q.y-p.y,d=Math.sqrt(dx*dx+dy*dy)
+                    if(d>5&&d<150){
+                        let f=(0.1*p.m*q.m)/(d*d)
+                        p.vx+=Math.cos(Math.atan2(dy,dx))*f
+                        p.vy+=Math.sin(Math.atan2(dy,dx))*f
+                    }
+                }
+            }
+            p.x+=p.vx
+            p.y+=p.vy
+            if(p.x<0||p.x>c.width) p.vx*=-1
+            if(p.y<0||p.y>c.height) p.vy*=-1
+            x.beginPath()
+            x.arc(p.x,p.y,p.m*2,0,Math.PI*2)
+            x.fillStyle=p.c
+            x.fill()
+        }
+        animId=requestAnimationFrame(loop)
+    }
+    loop()
+}
+function startSim2(){
+    const c=document.getElementById('c2'),x=c.getContext('2d')
+    let stars=[]
+    for(let i=0;i<800;i++){const r=Math.random()*c.height*0.4,a=Math.random()*Math.PI*2;stars.push({r:r,a:a,s:Math.random()*0.02+0.005,sz:Math.random()*1.5})}
+    function loop(){
+        x.fillStyle='rgba(0,0,0,0.1)'
+        x.fillRect(0,0,c.width,c.height)
+        x.save()
+        x.translate(c.width/2,c.height/2)
+        stars.forEach(s=>{
+            s.a+=s.s*(100/s.r)
+            const u=Math.cos(s.a)*s.r,v=Math.sin(s.a)*s.r
+            x.beginPath()
+            x.arc(u,v,s.sz,0,Math.PI*2)
+            x.fillStyle='white'
+            x.fill()
+        })
+        x.restore()
+        animId=requestAnimationFrame(loop)
+    }
+    loop()
+}
+let sim3State={ps:[],drag:false,sx:0,sy:0,ex:0,ey:0}
+function startSim3(){
+    const c=document.getElementById('c3'),x=c.getContext('2d')
+    sim3State.ps=[]
+    const sun={x:c.width/2,y:c.height/2,m:500}
+    function Body(x0,y0,vx0,vy0,m0,c0){this.x=x0;this.y=y0;this.vx=vx0;this.vy=vy0;this.m=m0;this.c=c0}
+    for(let i=0;i<8;i++){
+        const ang=Math.random()*Math.PI*2,dist=60+Math.random()*160
+        sim3State.ps.push(new Body(sun.x+Math.cos(ang)*dist,sun.y+Math.sin(ang)*dist,Math.random()*0.5-0.25,Math.random()*0.5-0.25,Math.random()*6+1,'hsl('+Math.random()*360+',80%,70%)'))
+    }
+    c.onmousedown=e=>{
+        const r=c.getBoundingClientRect()
+        sim3State.drag=true
+        sim3State.sx=e.clientX-r.left
+        sim3State.sy=e.clientY-r.top
+    }
+    c.onmousemove=e=>{
+        if(!sim3State.drag) return
+        const r=c.getBoundingClientRect()
+        sim3State.ex=e.clientX-r.left
+        sim3State.ey=e.clientY-r.top
+    }
+    c.onmouseup=e=>{
+        if(!sim3State.drag) return
+        const r=c.getBoundingClientRect()
+        const mx=(sim3State.sx+sim3State.ex)/2,my=(sim3State.sy+sim3State.ey)/2
+        const vx=(sim3State.sx - sim3State.ex)*0.05
+        const vy=(sim3State.sy - sim3State.ey)*0.05
+        sim3State.ps.push(new Body(sim3State.sx,sim3State.sy,vx,vy,Math.random()*4+1,'hsl('+Math.random()*360+',80%,70%)'))
+        sim3State.drag=false
+        sim3State.sx=sim3State.sy=sim3State.ex=sim3State.ey=0
+    }
+    function loop(){
+        x.fillStyle='rgba(0,0,0,0.2)'
+        x.fillRect(0,0,c.width,c.height)
+        x.beginPath()
+        x.arc(sun.x,sun.y,12,0,Math.PI*2)
+        x.fillStyle='#ffdd66'
+        x.fill()
+        for(let i=0;i<sim3State.ps.length;i++){
+            const p=sim3State.ps[i]
+            const dx=sun.x-p.x,dy=sun.y-p.y,d=Math.sqrt(dx*dx+dy*dy)+0.0001
+            const fg=(0.5*sun.m*p.m)/(d*d)
+            p.vx+=dx/d*fg
+            p.vy+=dy/d*fg
+            p.x+=p.vx
+            p.y+=p.vy
+            x.beginPath()
+            x.arc(p.x,p.y,p.m,0,Math.PI*2)
+            x.fillStyle=p.c
+            x.fill()
+        }
+        if(sim3State.drag){
+            x.beginPath()
+            x.moveTo(sim3State.sx,sim3State.sy)
+            x.lineTo(sim3State.ex||sim3State.sx,sim3State.ey||sim3State.sy)
+            x.strokeStyle='rgba(255,255,255,0.5)'
+            x.stroke()
+        }
+        animId=requestAnimationFrame(loop)
+    }
+    loop()
+}
+function resetSim3(){
+    if(animId) cancelAnimationFrame(animId)
+    startSim3()
+}
+function startSim4(){
+    const c=document.getElementById('c4'),x=c.getContext('2d')
+    const stars=[]
+    for(let i=0;i<300;i++) stars.push({x:Math.random()*c.width,y:Math.random()*c.height,z:Math.random()*2+0.2})
+    let mx=c.width/2,my=c.height/2,boost=0
+    c.onmousemove=e=>{const r=c.getBoundingClientRect();mx=e.clientX-r.left;my=e.clientY-r.top}
+    c.onmousedown=()=>{boost=6}
+    c.onmouseup=()=>{boost=0}
+    function loop(){
+        x.fillStyle='rgba(0,0,0,0.15)'
+        x.fillRect(0,0,c.width,c.height)
+        for(let i=0;i<stars.length;i++){
+            const s=stars[i]
+            const dx=(s.x-mx)*0.001,dy=(s.y-my)*0.001
+            s.x+=dx*(s.z+boost)
+            s.y+=dy*(s.z+boost)
+            if(s.x<0||s.x>c.width||s.y<0||s.y>c.height){
+                s.x=Math.random()*c.width
+                s.y=Math.random()*c.height
+            }
+            x.beginPath()
+            x.arc(s.x,s.y,s.z,0,Math.PI*2)
+            x.fillStyle='white'
+            x.fill()
+        }
+        animId=requestAnimationFrame(loop)
+    }
+    loop()
+}
+startSim1()
+</script>
+</body>
+</html>
