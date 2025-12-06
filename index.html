@@ -8,7 +8,6 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Orbitron:wght@400;500;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
 <style>
-/* --- 変数定義 --- */
 :root {
     --primary: #4facfe;
     --secondary: #00f2fe;
@@ -22,7 +21,6 @@
     --neon-glow: 0 0 10px rgba(79, 172, 254, 0.5), 0 0 20px rgba(79, 172, 254, 0.3);
 }
 
-/* --- リセット & 基本設定 --- */
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
 body {
@@ -37,26 +35,22 @@ body {
     position: relative;
 }
 
-/* スクロールバーのカスタマイズ */
 ::-webkit-scrollbar { width: 8px; }
 ::-webkit-scrollbar-track { background: #0b101a; }
 ::-webkit-scrollbar-thumb { background: #2d4a6d; border-radius: 4px; }
 ::-webkit-scrollbar-thumb:hover { background: var(--primary); }
 
-/* --- 背景アニメーション & グリッド --- */
 .bg-layer {
     position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1;
     pointer-events: none;
     overflow: hidden;
 }
 
-/* 深宇宙のグラデーション */
 .bg-gradient {
     position: absolute; width: 100%; height: 100%;
     background: radial-gradient(ellipse at bottom, #1b2735 0%, #090a0f 100%);
 }
 
-/* サイバーグリッド（地面） */
 .cyber-grid {
     position: absolute;
     bottom: -30%;
@@ -78,9 +72,8 @@ body {
     100% { transform: perspective(500px) rotateX(60deg) translateY(40px); }
 }
 
-/* 星のエフェクト */
 .stars-container { 
-    position: absolute; top: 0; left: 0; width: 110%; height: 110%; /* パララックス用に少し大きく */
+    position: absolute; top: 0; left: 0; width: 110%; height: 110%;
     transform: translate(-5%, -5%);
 }
 .star {
@@ -97,7 +90,6 @@ body {
 h1, h2, h3, .widget-title { font-family: 'Orbitron', sans-serif; }
 a { text-decoration: none; color: inherit; transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1); }
 
-/* --- ヘッダー --- */
 header {
     background: rgba(5, 8, 16, 0.7);
     backdrop-filter: blur(16px);
@@ -112,7 +104,6 @@ header {
     align-items: center;
 }
 
-/* ロゴのグリッチエフェクト */
 .logo {
     font-size: 1.5rem;
     font-weight: 900;
@@ -151,7 +142,6 @@ header {
     100% { clip-path: inset(70% 0 10% 0); transform: translate(-2px, 0); }
 }
 
-/* ナビゲーション */
 nav ul { list-style: none; display: flex; gap: 0.5rem; flex-wrap: wrap; justify-content: flex-end; }
 nav li a {
     font-size: 0.8rem;
@@ -161,7 +151,6 @@ nav li a {
     color: var(--text-muted);
     overflow: hidden;
 }
-/* SF的なホバーエフェクト */
 nav li a::before {
     content: '';
     position: absolute; bottom: 0; left: 0; width: 100%; height: 2px;
@@ -180,7 +169,6 @@ nav li a:hover::before {
     transform-origin: left;
 }
 
-/* --- ヒーローセクション --- */
 .hero {
     text-align: center;
     padding: 140px 20px 80px;
@@ -198,15 +186,14 @@ nav li a:hover::before {
     animation: fadeIn 1s ease forwards 0.5s;
 }
 
-/* タイピングエフェクト用のカーソル */
 .hero p {
     color: var(--text-muted);
     font-size: 1.2rem;
-    font-family: 'Share Tech Mono', monospace; /* 等幅フォント */
+    font-family: 'Share Tech Mono', monospace;
     max-width: 600px;
     margin: 0 auto;
     display: inline-block;
-    border-right: 2px solid var(--secondary); /* カーソル */
+    border-right: 2px solid var(--secondary);
     white-space: nowrap;
     overflow: hidden;
     width: 0;
@@ -217,7 +204,6 @@ nav li a:hover::before {
 @keyframes typing { from { width: 0; } to { width: 100%; } }
 @keyframes blink { from, to { border-color: transparent; } 50% { border-color: var(--secondary); } }
 
-/* --- メインコンテナ --- */
 .container {
     max-width: 960px;
     margin: 0 auto 80px;
@@ -234,7 +220,6 @@ nav li a:hover::before {
     position: relative;
 }
 
-/* コンテナの装飾（四隅のアクセント） */
 .container::before, .container::after {
     content: ''; position: absolute; width: 20px; height: 20px;
     border: 2px solid var(--secondary); transition: all 0.3s;
@@ -256,7 +241,6 @@ nav li a:hover::before {
     padding-bottom: 2px;
 }
 
-/* --- X (Twitter) ウィジェットエリア --- */
 .widget-frame {
     position: relative;
     border-radius: 16px;
@@ -285,7 +269,6 @@ nav li a:hover::before {
     z-index: 2;
     box-shadow: 0 0 10px rgba(0, 242, 254, 0.2);
 }
-/* ステータスランプ */
 .widget-title::before {
     content: ''; display: inline-block; width: 6px; height: 6px;
     background: #0f0; border-radius: 50%; margin-right: 8px;
@@ -302,7 +285,6 @@ nav li a:hover::before {
     position: relative;
 }
 
-/* 走査線（スキャンライン）エフェクト */
 .scanlines {
     position: absolute; top: 0; left: 0; width: 100%; height: 100%;
     background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,0) 50%, rgba(0,0,0,0.1) 50%, rgba(0,0,0,0.1));
@@ -325,7 +307,6 @@ nav li a:hover::before {
 
 .twitter-timeline { position: relative; z-index: 1; }
 
-/* --- フッター --- */
 footer {
     text-align: center;
     padding: 40px;
@@ -342,7 +323,6 @@ footer span {
     color: var(--secondary);
 }
 
-/* --- レスポンシブ --- */
 @media (max-width: 768px) {
     header { flex-direction: column; gap: 1rem; padding: 1.5rem 1rem; }
     .hero h2 { font-size: 2.2rem; }
@@ -362,7 +342,7 @@ footer span {
 </div>
 
 <header>
-    <a href="index.html" class="logo" data-text="Root's Laboratory">Root's Laboratory</a>
+    <a href="index.html" class="logo" data-text="Root's Laboratory">るーとの研究室</a>
     <nav>
         <ul>
             <li><a href="index.html">TOP</a></li>
@@ -377,20 +357,20 @@ footer span {
 
 <div class="hero">
     <h2>Welcome to the Lab.</h2>
-    <p>Exploring the Universe, Physics, and Curiosity_</p>
+    <p>Exploring the Universe, Physics, with Curiosity...</p>
 </div>
 
 <main class="container">
     <div class="intro-text">
         <p>
             ようこそ、<strong>るーとの研究室</strong>へ。<br>
-            ここは天文学、物理学、そして知の探求を行うデジタル実験場。<br>
-            無限の好奇心と共に、観測データを記録しています。
+            ここは管理者のるーとが気ままに知の探求を行う研究室。<br>
+            無限の好奇心と共に、皆様が新しい知見を享受できますように。
         </p>
     </div>
 
     <div class="widget-frame">
-        <div class="widget-title">LATEST LOGS</div>
+        <div class="widget-title">TIMELINE</div>
         <div class="widget-bg">
             <div class="scanlines"></div>
             <div class="twitter-wrapper">
@@ -413,7 +393,6 @@ footer span {
 </footer>
 
 <script>
-    // 星の生成
     const starsContainer = document.getElementById('starsContainer');
     const starCount = 120;
 
@@ -421,16 +400,13 @@ footer span {
         const star = document.createElement('div');
         star.classList.add('star');
         
-        // ランダムな位置とサイズ
         const size = Math.random() * 2 + 1;
         star.style.width = size + 'px';
         star.style.height = size + 'px';
         
-        // 画面より少し広範囲に配置（パララックス時の切れ防止）
         star.style.left = (Math.random() * 110 - 5) + '%';
         star.style.top = (Math.random() * 110 - 5) + '%';
         
-        // 奥行き（parallaxの深さ）をランダムに割り当て
         star.dataset.depth = Math.random(); 
 
         star.style.setProperty('--duration', `${Math.random() * 3 + 2}s`);
@@ -440,26 +416,21 @@ footer span {
         starsContainer.appendChild(star);
     }
 
-    // マウスパララックス効果（マウスの動きで星が動く）
     document.addEventListener('mousemove', (e) => {
         const x = e.clientX / window.innerWidth;
         const y = e.clientY / window.innerHeight;
 
-        // 星を動かす
         const stars = document.querySelectorAll('.star');
         stars.forEach(star => {
             const depth = parseFloat(star.dataset.depth);
-            const moveX = (x - 0.5) * (depth * 30); // 深度に応じて移動量を変える
+            const moveX = (x - 0.5) * (depth * 30);
             const moveY = (y - 0.5) * (depth * 30);
             star.style.transform = `translate(${moveX}px, ${moveY}px)`;
         });
 
-        // 背景グリッドも少し傾ける（3D感の強調）
         const grid = document.querySelector('.cyber-grid');
         const rotateX = 60 + (y - 0.5) * 5;
         const rotateY = (x - 0.5) * 5;
-        // grid.style.transform = `perspective(500px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
-        // グリッドのアニメーションと干渉しないよう、今回はスキップまたは微調整が必要
     });
 </script>
 
