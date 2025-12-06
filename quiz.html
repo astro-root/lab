@@ -23,6 +23,7 @@
     --card-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
 }
 * { margin: 0; padding: 0; box-sizing: border-box; }
+
 body {
     font-family: 'Noto Sans JP', sans-serif;
     background: var(--bg-dark);
@@ -34,6 +35,7 @@ body {
     overflow-x: hidden;
     position: relative;
 }
+
 body::before {
     content: ''; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
     background: radial-gradient(ellipse at top, #1b2735 0%, #090a0f 100%); z-index: -2;
@@ -45,14 +47,17 @@ body::after {
     animation: nebulaMove 30s ease-in-out infinite alternate; z-index: -1;
 }
 @keyframes nebulaMove { 0% { transform: translate(0, 0); } 100% { transform: translate(-5%, -5%); } }
+
 h1, h2, h3 { font-family: 'Orbitron', 'Noto Sans JP', sans-serif; }
 a { text-decoration: none; color: inherit; transition: all 0.3s ease; }
+
 .stars-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
 .star {
     position: absolute; background: #fff; border-radius: 50%;
     box-shadow: 0 0 4px #fff; animation: twinkle var(--duration) ease-in-out infinite; opacity: 0;
 }
 @keyframes twinkle { 0%, 100% { opacity: 0.2; transform: scale(0.8); } 50% { opacity: var(--opacity); transform: scale(1.2); } }
+
 header {
     background: rgba(5, 8, 16, 0.8); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
     padding: 0.8rem 2rem; position: sticky; top: 0; z-index: 100;
@@ -70,6 +75,7 @@ header {
 .logo::after { color: #00fff9; z-index: -2; animation: glitch-anim-2 3s infinite linear alternate-reverse; }
 @keyframes glitch-anim-1 { 0% { clip-path: inset(20% 0 80% 0); transform: translate(-2px, 0); } 100% { clip-path: inset(30% 0 50% 0); transform: translate(2px, 0); } }
 @keyframes glitch-anim-2 { 0% { clip-path: inset(10% 0 60% 0); transform: translate(2px, 0); } 100% { clip-path: inset(70% 0 10% 0); transform: translate(-2px, 0); } }
+
 nav ul { list-style: none; display: flex; gap: 1rem; flex-wrap: wrap; justify-content: flex-end; }
 nav li a {
     font-size: 0.8rem; font-weight: 500; padding: 8px 16px; border-radius: 4px;
@@ -79,6 +85,7 @@ nav li a.active, nav li a:hover {
     color: var(--secondary); background: rgba(79, 172, 254, 0.1);
     border-color: rgba(79, 172, 254, 0.3); box-shadow: 0 0 15px rgba(79, 172, 254, 0.2);
 }
+
 .grid-container {
     max-width: 1100px;
     margin: 40px auto 80px;
@@ -90,6 +97,7 @@ nav li a.active, nav li a:hover {
     animation: fadeInUp 0.8s ease-out;
 }
 @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+
 .glass-panel {
     background: var(--glass-bg);
     backdrop-filter: blur(16px);
@@ -121,6 +129,7 @@ nav li a.active, nav li a:hover {
     content: ''; display: block; width: 4px; height: 20px;
     background: var(--primary); box-shadow: 0 0 10px var(--primary);
 }
+
 .console-window {
     background: var(--console-bg);
     border-radius: 8px;
@@ -138,6 +147,7 @@ nav li a.active, nav li a:hover {
     background-size: 100% 2px, 3px 100%;
     pointer-events: none;
 }
+
 #quiz-question {
     font-size: 1.1rem;
     margin-bottom: 30px;
@@ -145,6 +155,7 @@ nav li a.active, nav li a:hover {
     color: #fff;
     text-shadow: 0 0 5px rgba(255,255,255,0.5);
 }
+
 .input-group {
     display: flex;
     gap: 10px;
@@ -182,6 +193,7 @@ nav li a.active, nav li a:hover {
     transform: translateY(-2px);
     box-shadow: 0 0 20px rgba(79, 172, 254, 0.4);
 }
+
 #quiz-result {
     margin-top: 20px;
     padding: 15px;
@@ -195,6 +207,7 @@ nav li a.active, nav li a:hover {
 }
 #quiz-result.show { display: block; animation: fadeIn 0.5s; }
 @keyframes fadeIn { from{ opacity:0; } to { opacity:1; } }
+
 .tool-card {
     text-align: center;
     padding: 10px;
@@ -231,11 +244,13 @@ nav li a.active, nav li a:hover {
     transform: translateY(-2px);
 }
 .tool-btn:hover::before { left: 100%; }
+
 footer {
     text-align: center; padding: 30px; font-size: 0.8rem; color: var(--text-muted);
     border-top: 1px solid var(--glass-border); background: rgba(5, 8, 16, 0.9);
     margin-top: auto; z-index: 10;
 }
+
 @media (max-width: 800px) {
     .grid-container { grid-template-columns: 1fr; gap: 40px; }
     header { flex-direction: column; gap: 1rem; padding: 1.5rem 1rem; }
@@ -405,9 +420,7 @@ footer {
             }
             const answeredDate = localStorage.getItem('lastQuizAnsweredDate');
             if (answeredDate === todayISO()) {
-                const userAns = localStorage.getItem('lastQuizUserAns') || '';
                 const wasCorrect = localStorage.getItem('lastQuizWasCorrect') === '1';
-                const correctAnsList = window.currentQuiz.a.split(',').map(s => normalizeStr(s));
                 const correctDisplay = window.currentQuiz.a;
                 resultBox.classList.add('show');
                 if (wasCorrect) {
