@@ -325,7 +325,7 @@ footer span { font-family: 'Orbitron'; color: var(--secondary); }
 </div>
 
 <header>
-    <a href="index.html" class="logo" data-text="Root's Laboratory">るーとの研究室</a>
+    <a href="index.html" class="logo" data-text="Root's Laboratory">Root's Laboratory</a>
     <nav>
         <ul>
             <li><a href="index.html">TOP</a></li>
@@ -484,6 +484,7 @@ footer span { font-family: 'Orbitron'; color: var(--secondary); }
             }
             localStorage.setItem('lastQuizIndex', String(quizIndex));
             localStorage.setItem('lastQuizDate', todayISO());
+
             if (validRows[quizIndex] && validRows[quizIndex].length >= 2) {
                 window.currentQuiz = {
                     q: validRows[quizIndex][0],
@@ -554,6 +555,27 @@ footer span { font-family: 'Orbitron'; color: var(--secondary); }
     document.getElementById('quiz-answer').addEventListener('keypress', function(e){ 
         if (e.key === 'Enter') checkAnswer(); 
     });
+
+
+    let rolloverInterval = setInterval(() => {
+        try {
+            const storedDate = localStorage.getItem('lastQuizDate');
+            const today = todayISO();
+            if (storedDate !== today) {
+                loadQuiz();
+            }
+        } catch (e) {
+            console.error('rollover check failed', e);
+        }
+    }, 30 * 1000);
+
+    document.addEventListener('visibilitychange', () => {
+        if (document.visibilityState === 'visible') {
+            const storedDate = localStorage.getItem('lastQuizDate');
+            if (storedDate !== todayISO()) loadQuiz();
+        }
+    });
+
 </script>
 </body>
 </html>
